@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+### Strona główna (Dashboard):
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- Po zalogowaniu użytkownik zostaje przekierowany na stronę główną, na której widzi listę projektów przypisanych do niego.
+Wyświetla się ogólna lista projektów wraz z ich nazwami, terminami i statusami.
+Użytkownik ma dostęp do opcji filtrowania i sortowania projektów.
 
-## Available Scripts
+### Lista projektów:
 
-In the project directory, you can run:
+- Użytkownik może przejść do listy wszystkich projektów, niezależnie od przypisania.
+Widoczne są podstawowe informacje o projektach, takie jak nazwa, termin i status.
 
-### `npm start`
+### Tworzenie nowego projektu:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Użytkownik ma możliwość utworzenia nowego projektu poprzez wypełnienie formularza.
+Formularz może zawierać pola takie jak nazwa projektu, opis, termin itp.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Edycja projektu:
 
-### `npm test`
+- Użytkownik, który jest właścicielem lub ma odpowiednie uprawnienia, może edytować istniejący projekt.
+Możliwość zmiany nazwy, opisu, terminu itp.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Dodawanie i edycja zadań:
 
-### `npm run build`
+- W ramach projektu użytkownik może tworzyć i edytować zadania.
+Formularz dodawania/edycji zadania może zawierać pola, takie jak nazwa zadania, opis, termin, przypisany użytkownik itp.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Przypisywanie użytkowników do projektu:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Użytkownik może przypisywać innych użytkowników do projektu jako członków zespołu lub liderów.
+Dostęp do tej funkcji mogą mieć tylko użytkownicy z odpowiednimi uprawnieniami.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Zmiana statusu projektu i zadań:
 
-### `npm run eject`
+- Użytkownik ma możliwość zmiany statusu projektu na np. "w toku", "zakończony" itp.
+Może również aktualizować statusy zadań, oznaczając je jako "do zrobienia", "w trakcie", "zakończone" itp.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Szczegóły projektu:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- sPo kliknięciu w projekt użytkownik zostaje przeniesiony na stronę szczegółową projektu.
+Tam może zobaczyć wszystkie informacje o projekcie, takie jak lista zadań, opis, termin itp.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Paginacja i sortowanie:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- W przypadku większej liczby projektów i zadań, aplikacja powinna obsługiwać paginację, pozwalając na wyświetlanie wyników na kilku stronach.
+Użytkownik powinien mieć możliwość sortowania projektów i zadań według różnych kryteriów.
 
-## Learn More
+### Rejestracja i logowanie:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Aplikacja powinna umożliwiać użytkownikom rejestrację nowych kont i logowanie się.
+W zależności od statusu użytkownika (zalogowany/gość) dostępne będą różne funkcjonalności.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Role użytkowników:
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- W zależności od roli użytkownika (np. pracownik, lider projektu, administrator), dostępne są różne funkcjonalności.
+Pracownicy mogą przeglądać projekty, liderzy mogą nimi zarządzać, a administratorzy mają pełne uprawnienia.
