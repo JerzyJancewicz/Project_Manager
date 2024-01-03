@@ -1,3 +1,7 @@
+### skrypty do node-moduls
+-npm install react-scripts --save-dev
+-npm start
+
 ### Strona główna (Dashboard):
 
 - Po zalogowaniu użytkownik zostaje przekierowany na stronę główną, na której widzi listę projektów przypisanych do niego.
