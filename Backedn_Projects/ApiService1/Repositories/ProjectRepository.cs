@@ -1,11 +1,13 @@
 ﻿using ApiService1.Context;
+using ApiService1.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiService1.Repositories
 {
 
     public interface IProjectRepository
     {
-
+        public Task<List<Project>> GetAll();
     }
     public class ProjectRepository : IProjectRepository
     {
@@ -16,6 +18,9 @@ namespace ApiService1.Repositories
             _context = context;
         }
 
-
+        public async Task<List<Project>> GetAll()
+        {
+            return await _context.Project.ToListAsync();
+        }
     }
 }

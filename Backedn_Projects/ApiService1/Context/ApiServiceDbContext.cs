@@ -9,11 +9,11 @@ namespace ApiService1.Context
         {
         }
 
-        public virtual DbSet<Project> Project { get; set; }
-        public virtual DbSet<ProjectDetails> ProjectDetails { get; set; }
-        public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<UserDetails> UserDetails { get; set; }
+        public DbSet<Project> Project { get; set; }
+        public DbSet<ProjectDetails> ProjectDetails { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<UserDetails> UserDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace ApiService1.Context
             {
                 e.HasKey(p => p.IdProject);
                 e.Property(p => p.CreatedAt).IsRequired();
-                e.Property(p => p.LastModified).IsRequired();
+                e.Property(p => p.LastModified).IsRequired();               
             });
 
             modelBuilder.Entity<ProjectDetails>(e =>
