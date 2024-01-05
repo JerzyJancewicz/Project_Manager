@@ -9,18 +9,9 @@ namespace ApiService1.Mappers
         public ProjectMapper()
         {
             CreateMap<Project, ProjectGET>()
-                .ForMember(
-                    dest => dest.Title,
-                    opt => opt.MapFrom(src => src.ProjectDetailsList.FirstOrDefault() != null
-                                              ? src.ProjectDetailsList.FirstOrDefault().Title
-                                              : string.Empty)
-                )
-                .ForMember(
-                    dest => dest.Description,
-                    opt => opt.MapFrom(src => src.ProjectDetailsList.FirstOrDefault() != null
-                                              ? src.ProjectDetailsList.FirstOrDefault().Description
-                                              : string.Empty)
-                );
+                .ForMember(src => src.Title, opt => opt.MapFrom(src => src.IdProjectDetailsNavigation.Title))
+                .ForMember(src => src.Description, opt => opt.MapFrom(src => src.IdProjectDetailsNavigation.Description))
+                .ForMember(src => src.CreateAt, opt => opt.MapFrom(src => src.CreatedAt));
         }
     }
 }

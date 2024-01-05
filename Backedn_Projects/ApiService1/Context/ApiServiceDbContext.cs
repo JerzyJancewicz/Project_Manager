@@ -14,67 +14,54 @@ namespace ApiService1.Context
         public DbSet<Role> Role { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<UserDetails> UserDetails { get; set; }
+        public DbSet<UserProject> UserProject { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+                .HasKey(e => e.IdUser);
 
-            modelBuilder.Entity<Project>(e =>
-            {
-                e.HasKey(p => p.IdProject);
-                e.Property(p => p.CreatedAt).IsRequired();
-                e.Property(p => p.LastModified).IsRequired();               
-            });
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.IdUserDetailsNavigation)
+                .WithMany(ud => ud.Users)
+                .HasForeignKey(u => u.UserIdUser);
 
-            modelBuilder.Entity<ProjectDetails>(e =>
-            {
-                e.HasKey(p => p.IdProjectDetails);
-                e.Property(p => p.Title).IsRequired().HasMaxLength(100);
-                e.Property(p => p.Description).IsRequired().HasMaxLength(1000);
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.IdRoleNavigation)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleIdRole);
 
-                e.HasOne(k => k.IdProjectNavigation)
-                    .WithMany(k => k.ProjectDetailsList)
-                    .HasForeignKey(k => k.ProjectIdProject)
-                    .OnDelete(DeleteBehavior.ClientCascade);
-                e.HasOne(k => k.IdUserNavigation)
-                    .WithMany(k => k.ProjectDetailsList)
-                    .HasForeignKey(k => k.UserIdUser)
-                    .OnDelete(DeleteBehavior.ClientCascade);
-            });
+            modelBuilder.Entity<UserProject>()
+                .HasKey(up => new { up.UserId, up.ProjectId });
 
-            modelBuilder.Entity<Role>(e =>
-            {
-                e.HasKey(k => k.IdRole);
+            modelBuilder.Entity<UserProject>()
+                .HasOne(up => up.User)
+                .WithMany(u => u.UserProjects)
+                .HasForeignKey(up => up.UserId);
 
-                e.Property(k => k.RoleName).IsRequired().HasMaxLength(255);
-                e.Property(k => k.AssignedBy).IsRequired().HasMaxLength(255);
-            });
+            modelBuilder.Entity<UserProject>()
+                .HasOne(up => up.Project)
+                .WithMany(p => p.UserProjects)
+                .HasForeignKey(up => up.ProjectId);
 
-            modelBuilder.Entity<User>(e =>
-            {
-                e.HasKey(k => k.IdUser);
+            modelBuilder.Entity<Project>()
+                .HasKey(e => e.IdProject);
 
-                e.Property(k => k.Email).IsRequired().HasMaxLength(255);
-                e.Property(k => k.Password).IsRequired().HasMaxLength(255);
+            modelBuilder.Entity<Project>()
+                .HasOne(p => p.IdProjectDetailsNavigation)
+                .WithMany(pd => pd.Projects)
+                .HasForeignKey(p => p.ProjectDetailsIdProjectDetails);
 
-                e.HasOne(k => k.IdRoleNavigation)
-                    .WithMany(k => k.Users)
-                    .HasForeignKey(k => k.RoleIdRole)
-                    .OnDelete(DeleteBehavior.ClientCascade);
-                e.HasOne(k => k.IdUserDetailsNavigation)
-                    .WithMany(k => k.Users)
-                    .HasForeignKey(k => k.UserDetailsIdUserDetails)
-                    .OnDelete(DeleteBehavior.ClientCascade);
-            });
+            modelBuilder.Entity<ProjectDetails>()
+                .HasKey(e => e.IdProjectDetails);
 
-            modelBuilder.Entity<UserDetails>(e =>
-            {
-                e.HasKey(k => k.IdUserDetails);
+            modelBuilder.Entity<Role>()
+                .HasKey(e => e.IdRole);
 
-                e.Property(k => k.Name).IsRequired().HasMaxLength(255);
-                e.Property(k => k.Surname).IsRequired().HasMaxLength(255);
-            });
+            modelBuilder.Entity<UserDetails>()
+                .HasKey(e => e.IdUserDetails);
         }
     }
 }

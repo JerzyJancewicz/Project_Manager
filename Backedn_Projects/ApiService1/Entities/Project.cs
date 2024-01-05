@@ -5,6 +5,9 @@
         public int IdProject { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime LastModified { get; set; }
-        public virtual ICollection<ProjectDetails> ProjectDetailsList { get; set; } = new List<ProjectDetails>();
+        public int ProjectDetailsIdProjectDetails { get; set; }
+        public ProjectDetails IdProjectDetailsNavigation { get; set; } = default!;
+        public ICollection<UserProject>? UserProjects { get; set; }
+
     }
 }

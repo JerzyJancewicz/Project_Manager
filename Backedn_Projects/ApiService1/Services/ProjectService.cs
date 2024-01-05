@@ -23,13 +23,8 @@ namespace ApiService1.Services
         public async Task<List<ProjectGET>> GetAllProjects()
         {
             var projects = await _repository.GetAll();
-            var projectsGET = new List<ProjectGET>();
-            foreach (var project in projects)
-            {
-                var mappedProject = _mapper.Map<ProjectGET>(project);
-                projectsGET.Add(mappedProject);
-            }
-            return projectsGET;
+            var dtos = _mapper.Map<List<ProjectGET>>(projects);
+            return dtos;
         }
     }
 }

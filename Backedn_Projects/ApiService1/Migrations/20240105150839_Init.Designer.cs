@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiService1.Migrations
 {
     [DbContext(typeof(ApiServiceDbContext))]
-    [Migration("20240103233347_Init")]
+    [Migration("20240105150839_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -39,7 +39,12 @@ namespace ApiService1.Migrations
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ProjectDetailsIdProjectDetails")
+                        .HasColumnType("int");
+
                     b.HasKey("IdProject");
+
+                    b.HasIndex("ProjectDetailsIdProjectDetails");
 
                     b.ToTable("Project");
                 });
@@ -54,25 +59,13 @@ namespace ApiService1.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("ProjectIdProject")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("UserIdUser")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdProjectDetails");
-
-                    b.HasIndex("ProjectIdProject");
-
-                    b.HasIndex("UserIdUser");
 
                     b.ToTable("ProjectDetails");
                 });
@@ -87,13 +80,11 @@ namespace ApiService1.Migrations
 
                     b.Property<string>("AssignedBy")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdRole");
 
@@ -110,25 +101,23 @@ namespace ApiService1.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleIdRole")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserDetailsIdUserDetails")
+                    b.Property<int>("UserIdUser")
                         .HasColumnType("int");
 
                     b.HasKey("IdUser");
 
                     b.HasIndex("RoleIdRole");
 
-                    b.HasIndex("UserDetailsIdUserDetails");
+                    b.HasIndex("UserIdUser");
 
                     b.ToTable("User");
                 });
@@ -143,36 +132,41 @@ namespace ApiService1.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdUserDetails");
 
                     b.ToTable("UserDetails");
                 });
 
-            modelBuilder.Entity("ApiService1.Entities.ProjectDetails", b =>
+            modelBuilder.Entity("ApiService1.Entities.UserProject", b =>
                 {
-                    b.HasOne("ApiService1.Entities.Project", "IdProjectNavigation")
-                        .WithMany("ProjectDetailsList")
-                        .HasForeignKey("ProjectIdProject")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("UserProject");
+                });
+
+            modelBuilder.Entity("ApiService1.Entities.Project", b =>
+                {
+                    b.HasOne("ApiService1.Entities.ProjectDetails", "IdProjectDetailsNavigation")
+                        .WithMany("Projects")
+                        .HasForeignKey("ProjectDetailsIdProjectDetails")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ApiService1.Entities.User", "IdUserNavigation")
-                        .WithMany("ProjectDetailsList")
-                        .HasForeignKey("UserIdUser")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.Navigation("IdProjectNavigation");
-
-                    b.Navigation("IdUserNavigation");
+                    b.Navigation("IdProjectDetailsNavigation");
                 });
 
             modelBuilder.Entity("ApiService1.Entities.User", b =>
@@ -180,13 +174,13 @@ namespace ApiService1.Migrations
                     b.HasOne("ApiService1.Entities.Role", "IdRoleNavigation")
                         .WithMany("Users")
                         .HasForeignKey("RoleIdRole")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ApiService1.Entities.UserDetails", "IdUserDetailsNavigation")
                         .WithMany("Users")
-                        .HasForeignKey("UserDetailsIdUserDetails")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .HasForeignKey("UserIdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("IdRoleNavigation");
@@ -194,9 +188,33 @@ namespace ApiService1.Migrations
                     b.Navigation("IdUserDetailsNavigation");
                 });
 
+            modelBuilder.Entity("ApiService1.Entities.UserProject", b =>
+                {
+                    b.HasOne("ApiService1.Entities.Project", "Project")
+                        .WithMany("UserProjects")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiService1.Entities.User", "User")
+                        .WithMany("UserProjects")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ApiService1.Entities.Project", b =>
                 {
-                    b.Navigation("ProjectDetailsList");
+                    b.Navigation("UserProjects");
+                });
+
+            modelBuilder.Entity("ApiService1.Entities.ProjectDetails", b =>
+                {
+                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("ApiService1.Entities.Role", b =>
@@ -206,7 +224,7 @@ namespace ApiService1.Migrations
 
             modelBuilder.Entity("ApiService1.Entities.User", b =>
                 {
-                    b.Navigation("ProjectDetailsList");
+                    b.Navigation("UserProjects");
                 });
 
             modelBuilder.Entity("ApiService1.Entities.UserDetails", b =>

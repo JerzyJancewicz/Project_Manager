@@ -17,14 +17,34 @@ namespace ApiService1.Seeders
         {
             if (await _context.Database.CanConnectAsync())
             {
+                if (!_context.ProjectDetails.Any())
+                {
+                    var projectDetails = new ProjectDetails()
+                    {
+                        Title = "TIN Project",
+                        Description = "Web SPA Project which should use web API",
+                    };
+                    _context.ProjectDetails.Add(projectDetails);
+                }
+                await _context.SaveChangesAsync();
                 if (!_context.Project.Any())
                 {
                     var project = new Project()
                     {
                         CreatedAt = DateTime.UtcNow,
-                        LastModified = DateTime.UtcNow
+                        LastModified = DateTime.UtcNow,
+                        ProjectDetailsIdProjectDetails = 1
                     };
                     _context.Project.Add(project);
+                }
+                if (!_context.UserDetails.Any())
+                {
+                    var userDetails = new UserDetails()
+                    {
+                        Name = "Jerzy",
+                        Surname = "Jancewicz"
+                    };
+                    _context.UserDetails.Add(userDetails);
                 }
                 if (!_context.Role.Any())
                 {
@@ -48,15 +68,6 @@ namespace ApiService1.Seeders
                         _context.Role.Add(role);
                     }
                 }
-                if (!_context.UserDetails.Any())
-                {
-                    var userDetails = new UserDetails()
-                    {
-                        Name = "Jerzy",
-                        Surname = "Jancewicz"
-                    };
-                    _context.UserDetails.Add(userDetails);
-                }
                 await _context.SaveChangesAsync();
 
                 if (!_context.User.Any())
@@ -66,21 +77,18 @@ namespace ApiService1.Seeders
                         Email = "user@user.com",
                         Password = "user",
                         RoleIdRole = 2,
-                        UserDetailsIdUserDetails = 1
+                        UserIdUser = 1
                     };
                     _context.User.Add(user);
                 }
-                await _context.SaveChangesAsync();
-                if (!_context.ProjectDetails.Any())
+                if (!_context.UserProject.Any())
                 {
-                    var projectDetails = new ProjectDetails()
+                    var userProject = new UserProject()
                     {
-                        Title = "TIN Project",
-                        Description = "Web SPA Project which should use web API",
-                        UserIdUser = 1,
-                        ProjectIdProject = 1
+                        UserId = 1,
+                        ProjectId = 1
                     };
-                    _context.ProjectDetails.Add(projectDetails);
+                    _context.UserProject.Add(userProject);
                 }
                 await _context.SaveChangesAsync();
             }

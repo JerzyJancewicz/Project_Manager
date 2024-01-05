@@ -20,7 +20,10 @@ namespace ApiService1.Repositories
 
         public async Task<List<Project>> GetAll()
         {
-            return await _context.Project.ToListAsync();
+            var projects = await _context.Project.ToListAsync();
+            var projectDetails = await _context.ProjectDetails.ToListAsync();
+            projects.ForEach(e => e.IdProjectDetailsNavigation = projectDetails.FirstOrDefault(src => src.IdProjectDetails == e.ProjectDetailsIdProjectDetails));
+            return projects;
         }
     }
 }
