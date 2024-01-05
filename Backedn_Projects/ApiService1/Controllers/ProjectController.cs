@@ -1,5 +1,5 @@
-﻿using ApiService1.Services;
-using Microsoft.AspNetCore.Http;
+﻿using ApiService1.DTOs;
+using ApiService1.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiService1.Controllers
@@ -19,6 +19,20 @@ namespace ApiService1.Controllers
         public async Task<IActionResult> GetProject()
         {
             return Ok(await _service.GetAllProjects());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProject(ProjectCreate project)
+        {
+            await _service.CreateProject(project);
+            return Created("", "");
+        }
+
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> UpdateProject(int Id, ProjectUpdate project)
+        {
+            await _service.UpdateProject(Id, project);
+            return Ok();
         }
     }
 }

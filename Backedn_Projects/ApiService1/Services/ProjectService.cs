@@ -8,7 +8,10 @@ namespace ApiService1.Services
 
     public interface IProjectService
     {
-        public Task<List<ProjectGET>> GetAllProjects();    }
+        public Task<List<ProjectGET>> GetAllProjects();
+        public Task CreateProject(ProjectCreate projectCreate);
+        public Task UpdateProject(int Id, ProjectUpdate projectUpdate);
+    }
 
     public class ProjectService : IProjectService
     {
@@ -20,11 +23,31 @@ namespace ApiService1.Services
             _repository = repository;
             _mapper = mapper;
         }
+
         public async Task<List<ProjectGET>> GetAllProjects()
         {
             var projects = await _repository.GetAll();
             var dtos = _mapper.Map<List<ProjectGET>>(projects);
             return dtos;
+        }
+
+        public async Task CreateProject(ProjectCreate projectCreate)
+        {
+            var project = _mapper.Map<Project>(projectCreate);
+
+            var projectDetails = new ProjectDetails()
+            {
+                Title = projectCreate.Title,
+                Description = projectCreate.Description
+            };
+
+            await _repository.Create(project, projectDetails);
+        }
+
+        public async Task UpdateProject(int Id, ProjectUpdate projectUpdate)
+        {
+            var projectDetails = _mapper.Map<ProjectDetails>(projectUpdate);
+            await _repository.Update(Id, projectDetails);
         }
     }
 }

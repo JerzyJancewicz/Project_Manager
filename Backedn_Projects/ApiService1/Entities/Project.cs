@@ -9,5 +9,10 @@
         public ProjectDetails IdProjectDetailsNavigation { get; set; } = default!;
         public ICollection<UserProject>? UserProjects { get; set; }
 
+        public void SetCreatedAt()
+        {
+            CreatedAt = DateTime.UtcNow;
+            LastModified = DateTime.UtcNow;
+        }
     }
 }
