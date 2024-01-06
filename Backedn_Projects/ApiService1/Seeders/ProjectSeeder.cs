@@ -81,14 +81,22 @@ namespace ApiService1.Seeders
                     };
                     _context.User.Add(user);
                 }
+
+                await _context.SaveChangesAsync();
+
                 if (!_context.UserProject.Any())
                 {
-                    var userProject = new UserProject()
+                    var user = _context.User.FirstOrDefault();
+                    var project = _context.Project.FirstOrDefault();
+                    if (user != null && project != null)
                     {
-                        UserId = 1,
-                        ProjectId = 1
-                    };
-                    _context.UserProject.Add(userProject);
+                        var userProject = new UserProject()
+                        {
+                            UserId = user.IdUser,
+                            ProjectId = project.IdProject
+                        };
+                        _context.UserProject.Add(userProject);
+                    }
                 }
                 await _context.SaveChangesAsync();
             }

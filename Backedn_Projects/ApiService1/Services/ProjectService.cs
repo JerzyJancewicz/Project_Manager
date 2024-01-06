@@ -11,6 +11,7 @@ namespace ApiService1.Services
         public Task<List<ProjectGET>> GetAllProjects();
         public Task CreateProject(ProjectCreate projectCreate);
         public Task UpdateProject(int Id, ProjectUpdate projectUpdate);
+        public Task DeleteProject(int Id);
     }
 
     public class ProjectService : IProjectService
@@ -48,6 +49,11 @@ namespace ApiService1.Services
         {
             var projectDetails = _mapper.Map<ProjectDetails>(projectUpdate);
             await _repository.Update(Id, projectDetails);
+        }
+
+        public async Task DeleteProject(int Id)
+        {
+            await _repository.Delete(Id);
         }
     }
 }

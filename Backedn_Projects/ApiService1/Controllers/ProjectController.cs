@@ -33,6 +33,14 @@ namespace ApiService1.Controllers
         {
             await _service.UpdateProject(Id, project);
             return Ok();
+            //Conflict
+        }
+
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteProject(int Id)
+        {
+            await _service.DeleteProject(Id);
+            return Ok();
         }
     }
 }
