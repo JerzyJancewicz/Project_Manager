@@ -1,11 +1,13 @@
 ﻿using ApiService1.DTOs;
 using ApiService1.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http.Cors;
 
 namespace ApiService1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _service;

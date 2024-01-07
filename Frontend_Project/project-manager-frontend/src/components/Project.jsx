@@ -1,14 +1,14 @@
 import React from "react";
 
-function Project(){
+function Project(props){
     return(
         <div className="div-block-3">
             <div className="div-block-4">
               <div className="div-block-5">
                 <div className="div-block-7">
-                  <h4 className="projectdivheading-4">dddddddffffffffdddddddhhhhhhh</h4>
+                  <h4 className="projectdivheading-4">{props.title}</h4>
                 </div>
-                <p className="paragraph">ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+                <p className="paragraph">{props.description}</p>
               </div>
             </div>
             <div className="div-block-6">

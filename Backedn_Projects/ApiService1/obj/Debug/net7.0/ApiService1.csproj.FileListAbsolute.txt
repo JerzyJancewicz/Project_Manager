@@ -76,3 +76,9 @@ F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debu
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\AutoMapper.dll
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\System.Web.Cors.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\System.Net.Http.Formatting.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\System.Web.Http.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\System.Web.Http.Cors.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Newtonsoft.Json.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
