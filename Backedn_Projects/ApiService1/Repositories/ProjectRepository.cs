@@ -12,6 +12,7 @@ namespace ApiService1.Repositories
         public Task Create(Project project, ProjectDetails projectDetails);
         public Task Update(int Id, ProjectDetails projectDetails);
         public Task Delete(int Id);
+        public Task<Project?> GetProjectById(int Id);
     }
     public class ProjectRepository : IProjectRepository
     {
@@ -68,8 +69,13 @@ namespace ApiService1.Repositories
             if(project != null)
             {
                 _context.Project.Remove(project);
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Project?> GetProjectById(int Id)
+        {
+            return await _context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
         }
     }
 }

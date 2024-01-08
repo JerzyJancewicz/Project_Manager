@@ -10,11 +10,6 @@ using System.Web.Http.Cors;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-var cors = new EnableCorsAttribute("http://localhost:3000", "*", "*");
-var config = new HttpConfiguration();
-config.EnableCors(cors);
-
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApiServiceDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();

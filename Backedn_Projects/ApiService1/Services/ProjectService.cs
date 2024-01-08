@@ -12,6 +12,7 @@ namespace ApiService1.Services
         public Task CreateProject(ProjectCreate projectCreate);
         public Task UpdateProject(int Id, ProjectUpdate projectUpdate);
         public Task DeleteProject(int Id);
+        public Task<bool> ProjectExists(int Id);
     }
 
     public class ProjectService : IProjectService
@@ -48,12 +49,26 @@ namespace ApiService1.Services
         public async Task UpdateProject(int Id, ProjectUpdate projectUpdate)
         {
             var projectDetails = _mapper.Map<ProjectDetails>(projectUpdate);
-            await _repository.Update(Id, projectDetails);
+            var project = _repository.GetProjectById(Id);
+            if (project != null)
+            {
+                await _repository.Update(Id, projectDetails);
+            }
         }
 
         public async Task DeleteProject(int Id)
         {
-            await _repository.Delete(Id);
+            var project = _repository.GetProjectById(Id);
+            if (project != null)
+            {
+                await _repository.Delete(Id);
+            }
+        }
+
+        public async Task<bool> ProjectExists(int Id)
+        {
+            var project = await _repository.GetProjectById(Id);
+            return project != null;
         }
     }
 }

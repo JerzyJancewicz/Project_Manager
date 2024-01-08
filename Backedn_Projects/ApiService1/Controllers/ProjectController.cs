@@ -7,7 +7,6 @@ namespace ApiService1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _service;
@@ -33,6 +32,10 @@ namespace ApiService1.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> UpdateProject(int Id, ProjectUpdate project)
         {
+            if(!await _service.ProjectExists(Id))
+            {
+                return NotFound();
+            }
             await _service.UpdateProject(Id, project);
             return Ok();
             //Conflict
@@ -41,6 +44,10 @@ namespace ApiService1.Controllers
         [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteProject(int Id)
         {
+            if (!await _service.ProjectExists(Id))
+            {
+                return NotFound();
+            }
             await _service.DeleteProject(Id);
             return Ok();
         }

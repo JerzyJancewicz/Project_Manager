@@ -6,7 +6,16 @@ function ProjectDashboard(){
     const hasFetchedDataRef = useRef(false);
     useEffect(() =>{
         if(!hasFetchedDataRef.current){
-            fetch('/api/Project')
+            fetch('/api/Project', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title : 'TESTREACT',
+                    description: 'TEEESTDESC'
+                })
+            })
                 .then((res) => {
                     return res.json();
                 })
