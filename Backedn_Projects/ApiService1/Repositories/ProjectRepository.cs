@@ -2,6 +2,7 @@
 using ApiService1.DTOs;
 using ApiService1.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ApiService1.Repositories
 {
@@ -16,66 +17,78 @@ namespace ApiService1.Repositories
     }
     public class ProjectRepository : IProjectRepository
     {
-        private readonly ApiServiceDbContext _context;
+        private readonly IDbContextFactory<ApiServiceDbContext> _context;
 
-        public ProjectRepository(ApiServiceDbContext context)
+        public ProjectRepository(IDbContextFactory<ApiServiceDbContext> context)
         {
             _context = context;
         }
 
         public async Task<List<Project>> GetAll()
         {
-            var projects = await _context.Project.ToListAsync();
-            var projectDetails = await _context.ProjectDetails.ToListAsync();
-            foreach (var project in projects)
+            using (var context = _context.CreateDbContext())
             {
-                var currentProjectDetails = projectDetails.FirstOrDefault(src => src.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
-                if (currentProjectDetails != null)
+                var projects = await context.Project.ToListAsync();
+                var projectDetails = await context.ProjectDetails.ToListAsync();
+                foreach (var project in projects)
                 {
-                    project.IdProjectDetailsNavigation = currentProjectDetails;
+                    var currentProjectDetails = projectDetails.FirstOrDefault(src => src.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
+                    if (currentProjectDetails != null)
+                    {
+                        project.IdProjectDetailsNavigation = currentProjectDetails;
+                    }
                 }
+                return projects;
             }
-            return projects;
         }
         public async Task Create(Project project, ProjectDetails projectDetails)
         {
+            using (var context = _context.CreateDbContext())
+            {
+                context.ProjectDetails.Add(projectDetails);
+                await context.SaveChangesAsync();
 
-            _context.ProjectDetails.Add(projectDetails);
-            await _context.SaveChangesAsync();
+                project.SetCreatedAt();
+                project.ProjectDetailsIdProjectDetails = projectDetails.IdProjectDetails;
 
-            var projectIdDetails = _context.ProjectDetails.Max(e => e.IdProjectDetails);
-
-            project.SetCreatedAt();
-            project.ProjectDetailsIdProjectDetails = projectIdDetails;
-
-            _context.Project.Add(project);
-            await _context.SaveChangesAsync();
+                context.Project.Add(project);
+                await context.SaveChangesAsync();
+            }
         }
 
         public async Task Update(int Id, ProjectDetails projectDetails)
         {
-            var project = await _context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
-            if (project != null)
+            using (var context = _context.CreateDbContext())
             {
-                projectDetails.IdProjectDetails = project.ProjectDetailsIdProjectDetails;
-                _context.ProjectDetails.Update(projectDetails);
-                await _context.SaveChangesAsync();
+                var project = await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
+                if (project != null)
+                {
+                    projectDetails.IdProjectDetails = project.ProjectDetailsIdProjectDetails;
+                    context.ProjectDetails.Update(projectDetails);
+                    await context.SaveChangesAsync();
+                }
             }
         }
 
         public async Task Delete(int Id)
         {
-            var project = _context.Project.FirstOrDefault(e => e.IdProject == Id);
-            if(project != null)
+            using (var context = _context.CreateDbContext())
             {
-                _context.Project.Remove(project);
-                await _context.SaveChangesAsync();
+                var project = await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
+                if (project != null)
+                {
+                    context.Project.Remove(project);
+                    await context.SaveChangesAsync();
+                }
             }
         }
 
         public async Task<Project?> GetProjectById(int Id)
         {
-            return await _context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
+            using (var context = _context.CreateDbContext())
+            {
+                return await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
+            }
         }
     }
 }

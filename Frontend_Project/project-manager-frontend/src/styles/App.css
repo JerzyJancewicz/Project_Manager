@@ -1488,7 +1488,6 @@ p {
   left: 0%;
   right: 0%;
 }
-
 .addbutton {
   opacity: 1;
   border-radius: 20px;
@@ -1545,7 +1544,47 @@ p {
   position: relative;
   overflow: hidden;
 }
-
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  background-color: #864AF9;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.modal-heading {
+  margin-top: 0;
+  text-align: center;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 25px;
+}
+.modal-content button {
+  background-color: green;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+}
+#danger-button {
+  background-color: #b31312;
+}
 .div-block-7 {
   z-index: 0;
   width: 100%;
@@ -1569,7 +1608,69 @@ p {
   align-items: center;
   display: flex;
 }
-
+.overlay-edit {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.content-box {
+  background-color: #864AF9;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.heading-edit {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.form-edit {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.form-edit label {
+  margin-bottom: 5px;
+}
+.form-edit input,
+.form-edit textarea {
+  width: 100%;
+  padding: 10px;
+  background-color: #1D2B53;
+  border: 1px solid #727272;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+.edit-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.save-edit,
+.cancel-edit {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.save-edit {
+  background-color: #43b347;
+  color: white;
+}
+.cancel-edit {
+  background-color: #f44336;
+  color: white;
+}
 @media screen and (min-width: 1280px) {
   .primary-button {
     display: none;
