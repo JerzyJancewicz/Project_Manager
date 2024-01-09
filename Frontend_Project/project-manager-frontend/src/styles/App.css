@@ -1671,6 +1671,25 @@ p {
   background-color: #f44336;
   color: white;
 }
+.confirmation-alert {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 16px;
+  z-index: 1000;
+  transition: top 0.5s ease;
+}
+
+.confirmation-alert.show {
+  display: block;
+  top: 0;
+}
 @media screen and (min-width: 1280px) {
   .primary-button {
     display: none;
