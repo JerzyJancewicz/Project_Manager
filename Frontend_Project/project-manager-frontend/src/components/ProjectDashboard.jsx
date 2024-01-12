@@ -1,10 +1,14 @@
 import React, { useEffect,  useState, useRef } from "react";
 import Project from "./Project";
 import FailedToLoadData from "./Errors/FaileToLoadData"
+import ConfirmationAlert from "./Alerts/ConfirmationAlert";
 
 function ProjectDashboard(){
     const[projectData, setProjectData] = useState([]);
     const[isFailedToLoad, setIsFailedToLoad] = useState(false);
+    const[isProjectChanged, setIsProjectChanged] = useState(false);
+
+    const[message, setMessage] = useState("message");
     useEffect(() => { 
         handleGet();
     }, []);
@@ -38,6 +42,8 @@ function ProjectDashboard(){
         .then(response => {
             if(response.ok){
                 handleGet();
+                setIsProjectChanged(true);
+                setMessage("Project has been successfully created")
             }
         })
         .catch((error) => {
@@ -52,6 +58,24 @@ function ProjectDashboard(){
         setIsFailedToLoad(false);
     }
 
+    const handleMessageOnAction = (message) =>{
+        setMessage(message)
+    }
+    const handleIsDeleted = (isDeleted) => {
+        setIsProjectChanged(isDeleted);
+    }
+
+    useEffect(() => {
+    if(isProjectChanged){
+        const timer = setTimeout(() => {
+            setIsProjectChanged(false);
+        }, 2000)
+        return () => {
+        clearTimeout(timer);
+        };
+    }
+  }, [isProjectChanged]);
+
     return(
         <section className="crappo-section">
             <div>
@@ -59,6 +83,12 @@ function ProjectDashboard(){
                     isFailedToLoad={isFailedToLoad}
                     onCancel={handleCancel}
                 />
+                {isProjectChanged ?
+                    <ConfirmationAlert
+                        showAlert = {isProjectChanged}
+                        message = {message}
+                    />
+                 : <></>}
                 <div className="div-block">
                     <button data-w-id="2333b2d0-c779-4514-db04-d3dbf49952ad" className="addbutton w-button" onClick={handleCreate}>Add Project</button>
                     <div className="div-block-2">
@@ -68,7 +98,9 @@ function ProjectDashboard(){
                                 title = {data.title}
                                 description = {data.description} 
                                 Id = {data.idProject}
+                                messageOnAction = {handleMessageOnAction}
                                 onDelete ={handleProjectDelete}
+                                isDeleted = {handleIsDeleted}
                             />
                         ))}
                     </div>

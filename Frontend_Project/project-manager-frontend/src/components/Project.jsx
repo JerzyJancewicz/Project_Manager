@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {useState} from "react";
 import DeleteAlert from "./Alerts/DeleteAlert";
 import EditProjectForm from "./EditProjectForm";
-import ConfirmationAlert from "./Alerts/ConfirmationAlert";
 
 function Project(props){
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditBoxOpen, setIsEditBoxOpen] = useState(false);
-
-  // not working
-  const [confAlertMessage, setConfAlertMessage] = useState("Seuccess");
-  const [isConfAlertOpen, setIsConfAlertOpen] = useState(false);
 
   const [alertMessage, setAlertMessage] = useState("Are you sure you want to delete this project?");
   const handleDelete = (Id) => {
@@ -43,35 +37,13 @@ function Project(props){
     handleDelete(props.Id);
     setIsModalOpen(false);
 
-    setIsConfAlertOpen(true);
-    setConfAlertMessage("Project has been successfully deleted");
+    props.isDeleted(true);
+    props.messageOnAction("Project has been successfully deleted");
   }
   const handleConfirmEdit = () =>{}
 
-
-  // Not working
-  useEffect(() => {
-    if(isConfAlertOpen){
-      console.log('Closing oepeeeewaeawda...');
-      const timer = setTimeout(() => {
-        console.log('Closing alert...');
-        setIsConfAlertOpen(false);
-
-      }, 3000)
-      return () => {
-        console.log('Clearing timer...');
-        clearTimeout(timer);
-       };
-    }
-  }, [isConfAlertOpen]);
-
   return(
       <div className="div-block-3">
-          {/* not working */}
-          <ConfirmationAlert
-            showAlert = {isConfAlertOpen}
-            message = {confAlertMessage}
-          />
           <DeleteAlert
             isOpen={isModalOpen}
             onConfirm={handleConfirmDelete}
