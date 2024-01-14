@@ -1,4 +1,5 @@
-import React, { useEffect,  useState, useRef } from "react";
+import React, { useEffect,  useState } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
 import Project from "./Project";
 import FailedToLoadData from "./Errors/FaileToLoadData"
 import ConfirmationAlert from "./Alerts/ConfirmationAlert";
@@ -7,8 +8,11 @@ function ProjectDashboard(){
     const[projectData, setProjectData] = useState([]);
     const[isFailedToLoad, setIsFailedToLoad] = useState(false);
     const[isProjectChanged, setIsProjectChanged] = useState(false);
-
     const[message, setMessage] = useState("message");
+
+    const navigate = useNavigate("/dashboard");
+    //const location = useLocation();
+    //const isCreated = location.state?.isCreated || false;
     useEffect(() => { 
         handleGet();
     }, []);
@@ -19,37 +23,18 @@ function ProjectDashboard(){
                 return res.json();
             })
             .then((data) => {
-                console.log(data)
+                console.log(data);
                 setProjectData(data);
             })
             .catch(error =>{
-                console.log(error)
+                console.log(error);
                 setIsFailedToLoad(true);
             });
     }
 
     const handleCreate = () => {
-        fetch(`/api/Project`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title: 'cos',
-            description: 'csodesc'
-          })
-        })
-        .then(response => {
-            if(response.ok){
-                handleGet();
-                setIsProjectChanged(true);
-                setMessage("Project has been successfully created")
-            }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-      }
+        navigate("/create-project");
+    }
 
     const handleProjectDelete = (deletedDataId) => {
         setProjectData(projectData.filter(e => e.idProject !== deletedDataId));
@@ -66,15 +51,15 @@ function ProjectDashboard(){
     }
 
     useEffect(() => {
-    if(isProjectChanged){
-        const timer = setTimeout(() => {
-            setIsProjectChanged(false);
-        }, 2000)
-        return () => {
-        clearTimeout(timer);
-        };
-    }
-  }, [isProjectChanged]);
+        if(isProjectChanged){ // || isCreated
+            const timer = setTimeout(() => {
+                setIsProjectChanged(false);
+            }, 2000)
+            return () => {
+            clearTimeout(timer);
+            };
+        }
+    }, [isProjectChanged]);
 
     return(
         <section className="crappo-section">
@@ -96,7 +81,9 @@ function ProjectDashboard(){
                             <Project 
                                 key = {data.idProject}
                                 title = {data.title}
-                                description = {data.description} 
+                                description = {data.description}
+                                createdAt = {data.createAt}
+                                lastModified = {data.lastModified} 
                                 Id = {data.idProject}
                                 messageOnAction = {handleMessageOnAction}
                                 onDelete ={handleProjectDelete}
