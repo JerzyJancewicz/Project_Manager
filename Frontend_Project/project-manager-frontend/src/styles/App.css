@@ -907,7 +907,7 @@ p {
 .form-section.bg-linear-blue {
   height: 100px;
   text-align: left;
-  /* background-image: linear-gradient(#2b076e, #0d0d2b); */
+  background-image: linear-gradient(#2b076e, #0d0d2b);
   background-position: 100%, 0%, 0 0;
   background-repeat: no-repeat, no-repeat, repeat;
   /* background-size: 849px, 849px, auto; */
@@ -918,10 +918,8 @@ p {
 }
 
 .form-section.bg-linear-blue-copy {
-  /* background-image: linear-gradient(#0d0d2b, #2b076e); */
-  background-position: 100%, 0%, 0 0;
-  background-repeat: no-repeat, no-repeat, repeat;
-  background-size: 849px, 849px, auto;
+  background-image: linear-gradient(#0d0d2b, #2b076e);
+  
 }
 
 .mining-content {
@@ -1828,10 +1826,8 @@ opacity: 0.8;
 
   .form-section.bg-linear-blue-copy {
     height: 100px;
-    /* background-image: url('../images/Side-Bar.png'), url('../images/Side-Bar.png'), linear-gradient(#0d0d2b, #2b076e); */
     background-position: 100%, 0%, 0 0;
     background-repeat: no-repeat, no-repeat, repeat;
-    background-size: 849px, 849px, auto;
   }
 
   .copy-right-text.text-xs.text-height-base.tracking-normal.text-white {
@@ -1850,6 +1846,7 @@ opacity: 0.8;
   }
 
   .page-padding {
+    padding-top: 80px;
     text-align: left;
     align-items: baseline;
   }

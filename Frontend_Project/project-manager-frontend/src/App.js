@@ -6,6 +6,7 @@ import EditProjectForm from './components/EditProjectForm';
 import NotFound from './components/Errors/NotFound';
 import CreateProjectForm from "./components/CreateProjectForm"
 import ProjectDetails from "./components/ProjectDetails"
+import Home from './components/Home';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
       <Router>
         <NavBar />
           <Routes>
-            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<ProjectDashboard />} />
             <Route path="/edit-project/:Id" element={<EditProjectForm />} />
             <Route path="/create-project" element={<CreateProjectForm />} />
