@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import ProjectDashboard from './components/ProjectDashboard';
 import StyleComp from './components/StyleComp';
@@ -7,6 +7,14 @@ import NotFound from './components/Errors/NotFound';
 import CreateProjectForm from "./components/CreateProjectForm"
 import ProjectDetails from "./components/ProjectDetails"
 import Home from './components/Home';
+
+const ConditionalStyleComp = () => {
+  const location = useLocation();
+  if (location.pathname !== "/") {
+      return <StyleComp />;
+  }
+  return null;
+};
 
 function App() {
   return (
@@ -21,7 +29,7 @@ function App() {
             <Route path="/details-project/:Id" element={<ProjectDetails />} />
             <Route path="*" element={<NotFound />}/>
           </Routes>
-          <StyleComp />
+          <ConditionalStyleComp/>
       </Router>
     </div>
   );
