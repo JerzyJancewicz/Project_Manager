@@ -77,6 +77,11 @@ namespace ApiService1.Repositories
                 var project = await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
                 if (project != null)
                 {
+                    var projectDetails = await context.ProjectDetails.FirstOrDefaultAsync(e => e.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
+                    if (projectDetails != null)
+                    {
+                        context.ProjectDetails.Remove(projectDetails);
+                    }
                     context.Project.Remove(project);
                     await context.SaveChangesAsync();
                 }

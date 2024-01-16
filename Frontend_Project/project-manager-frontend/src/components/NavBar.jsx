@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Img from "../styles/images/project-manager_69759.png"
 
-
 function NavBar(){
 
     const [showNav, setShowNav] = useState(false);
