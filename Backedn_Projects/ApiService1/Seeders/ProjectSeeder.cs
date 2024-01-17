@@ -1,5 +1,7 @@
 ﻿using ApiService1.Context;
 using ApiService1.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace ApiService1.Seeders
@@ -7,10 +9,13 @@ namespace ApiService1.Seeders
     public class ProjectSeeder
     {
         private readonly ApiServiceDbContext _context;
-
-        public ProjectSeeder(ApiServiceDbContext context)
+        private readonly UserManager<User>? _userManager;
+        private readonly RoleManager<Role>? _roleManager;
+        public ProjectSeeder(ApiServiceDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task Seed()
@@ -27,15 +32,20 @@ namespace ApiService1.Seeders
                     _context.ProjectDetails.Add(projectDetails);
                 }
                 await _context.SaveChangesAsync();
-                if (!_context.Project.Any())
+
+                var projectDetailsId = await _context.ProjectDetails.FirstOrDefaultAsync(e => e.IdProjectDetails == 1);
+                if (projectDetailsId != null)
                 {
                     var project = new Project()
                     {
                         CreatedAt = DateTime.UtcNow,
                         LastModified = DateTime.UtcNow,
-                        ProjectDetailsIdProjectDetails = 1
+                        ProjectDetailsIdProjectDetails = projectDetailsId.IdProjectDetails
                     };
-                    _context.Project.Add(project);
+                    if (!_context.Project.Any())
+                    {
+                        _context.Project.Add(project);
+                    }
                 }
                 if (!_context.UserDetails.Any())
                 {
@@ -46,54 +56,50 @@ namespace ApiService1.Seeders
                     };
                     _context.UserDetails.Add(userDetails);
                 }
-                if (!_context.Role.Any())
+                await _context.SaveChangesAsync();
+
+                IdentityResult createUserResult = new IdentityResult();
+                var userDetailsId = await _context.UserDetails.FirstOrDefaultAsync(e => e.IdUserDetails == 1);
+                if (userDetailsId != null)
                 {
-                    var roles = new List<Role>()
+                    var user = new User { UserName = "username", Email = "email@example.com", UserIdUser = userDetailsId.IdUserDetails };
+                    if (_userManager is not null)
                     {
-                        new Role()
-                        {
-                            RoleName = "guest"
-                        },
-                        new Role()
-                        {
-                            RoleName = "user"
-                        },
-                        new Role()
-                        {
-                            RoleName = "admin"
-                        }
+                        createUserResult = await _userManager.CreateAsync(user, "Password123!");
+                    }
+                }
+
+                List<IdentityResult> createRoleResults = new List<IdentityResult>();
+                if (_roleManager is not null)
+                {
+                    var roles = new List<Role>() 
+                    {
+                        new Role(){ Name = "guest"},
+                        new Role(){ Name = "user"},
+                        new Role(){ Name = "admin"}
                     };
                     foreach (var role in roles)
                     {
-                        _context.Role.Add(role);
+                        createRoleResults.Add(await _roleManager.CreateAsync(role));
                     }
                 }
-                await _context.SaveChangesAsync();
 
-                if (!_context.User.Any())
+                var userId = await _context.User.FirstOrDefaultAsync(e => e.UserIdUser == 1);
+                if (_userManager is not null && createUserResult.Succeeded && createRoleResults.Where(e => e.Succeeded).Count() == 3 && userId is not null)
                 {
-                    var user = new User()
-                    {
-                        Email = "user@user.com",
-                        Password = "user",
-                        RoleIdRole = 2,
-                        UserIdUser = 1
-                    };
-                    _context.User.Add(user);
+                    IdentityResult addToRoleResult = await _userManager.AddToRoleAsync(userId, "admin");
                 }
-
-                await _context.SaveChangesAsync();
 
                 if (!_context.UserProject.Any())
                 {
-                    var user = _context.User.FirstOrDefault();
-                    var project = _context.Project.FirstOrDefault();
-                    if (user != null && project != null)
+                    var dbUser = _context.User.FirstOrDefault(e => e.UserIdUser == 1);
+                    var dbProject = _context.Project.FirstOrDefault(e => e.ProjectDetailsIdProjectDetails == 1);
+                    if (dbUser is not null && dbProject is not null)
                     {
                         var userProject = new UserProject()
                         {
-                            UserId = user.IdUser,
-                            ProjectId = project.IdProject
+                            UserId = dbUser.Id,
+                            ProjectId = dbProject.IdProject
                         };
                         _context.UserProject.Add(userProject);
                     }

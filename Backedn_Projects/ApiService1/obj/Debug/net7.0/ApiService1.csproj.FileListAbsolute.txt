@@ -82,3 +82,9 @@ F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debu
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\System.Web.Http.Cors.dll
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Newtonsoft.Json.dll
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.Extensions.Identity.Core.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.Extensions.Identity.Stores.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.Extensions.Options.dll

@@ -1,8 +1,10 @@
 using ApiService1.Context;
+using ApiService1.Entities;
 using ApiService1.Mappers;
 using ApiService1.Repositories;
 using ApiService1.Seeders;
 using ApiService1.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -16,6 +18,10 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ProjectSeeder>();
 builder.Services.AddAutoMapper(typeof(ProjectMapper));
+
+builder.Services.AddIdentity<User, Role>()
+        .AddEntityFrameworkStores<ApiServiceDbContext>()
+        .AddDefaultTokenProviders();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
