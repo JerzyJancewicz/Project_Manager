@@ -62,7 +62,7 @@ namespace ApiService1.Seeders
                 var userDetailsId = await _context.UserDetails.FirstOrDefaultAsync(e => e.IdUserDetails == 1);
                 if (userDetailsId != null)
                 {
-                    var user = new User { UserName = "username", Email = "email@example.com", UserIdUser = userDetailsId.IdUserDetails };
+                    var user = new User { Email = "email@example.com", UserIdUser = userDetailsId.IdUserDetails };
                     if (_userManager is not null)
                     {
                         createUserResult = await _userManager.CreateAsync(user, "Password123!");

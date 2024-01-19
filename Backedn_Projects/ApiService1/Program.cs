@@ -16,8 +16,13 @@ builder.Services.AddControllers();
 builder.Services.AddDbContextFactory<ApiServiceDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<ProjectSeeder>();
 builder.Services.AddAutoMapper(typeof(ProjectMapper));
+builder.Services.AddAutoMapper(typeof(UserMapper));
+
 
 builder.Services.AddIdentity<User, Role>()
         .AddEntityFrameworkStores<ApiServiceDbContext>()
