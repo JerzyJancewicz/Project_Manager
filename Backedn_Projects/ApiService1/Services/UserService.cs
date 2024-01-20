@@ -1,4 +1,6 @@
 ﻿using ApiService1.DTOs;
+using ApiService1.DTOs.UserDtos;
+using ApiService1.Entities;
 using ApiService1.Repositories;
 using AutoMapper;
 
@@ -9,6 +11,8 @@ namespace ApiService1.Services
         Task<List<UserGET>> GetUsers();
         Task<UserGET> GetUser(string Id);
         Task<bool> UserExists(string Id);
+        Task<bool> CreateUser(UserCreate userCreate);
+        Task<bool> UserExistsByEmail(string email);
     }
 
     public class UserService : IUserService
@@ -20,6 +24,14 @@ namespace ApiService1.Services
         {
             _repository = repository;
             _mapper = mapper;
+        }
+
+        public async Task<bool> CreateUser(UserCreate userCreate)
+        {
+            var user = _mapper.Map<User>(userCreate);
+            var userDetails = _mapper.Map<UserDetails>(userCreate);
+            var password = userCreate.Password;
+            return await _repository.Create(user, password, userDetails);
         }
 
         public async Task<UserGET> GetUser(string Id)
@@ -41,6 +53,11 @@ namespace ApiService1.Services
         public async Task<bool> UserExists(string Id)
         {
             return await _repository.UserExistsById(Id);
+        }
+
+        public async Task<bool> UserExistsByEmail(string email)
+        {
+            return await _repository.UserExistsByUsername(email);
         }
     }
 }

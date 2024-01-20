@@ -1,4 +1,5 @@
-﻿using ApiService1.Services;
+﻿using ApiService1.DTOs.UserDtos;
+using ApiService1.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiService1.Controllers
@@ -28,6 +29,20 @@ namespace ApiService1.Controllers
                 return NotFound();
             }
             return Ok(await _userService.GetUser(Id));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser(UserCreate userCreate)
+        {
+            if (await _userService.UserExistsByEmail(userCreate.Email))
+            {
+                return Conflict();
+            }
+            if (!await _userService.CreateUser(userCreate))
+            {
+                return Conflict();
+            }
+            return Created("","");
         }
     }
 }

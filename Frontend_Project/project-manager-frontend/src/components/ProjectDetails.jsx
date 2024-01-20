@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom'; // If you're using react-router
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const ProjectDetails = () => {
     const location = useLocation();

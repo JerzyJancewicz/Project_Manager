@@ -5,9 +5,7 @@ import Img from "../styles/images/project-manager_69759.png"
 import Login from "./UserCmp/Login";
 import Register from "./UserCmp/Register";
 
-
 function NavBar(){
-
     const [showNav, setShowNav] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
     const [isRegister, setIsRegister] = useState(false);
@@ -52,9 +50,9 @@ function NavBar(){
                 <div className={`nav-overlay ${showNav ? 'overlay-active' : ''}`} onClick={toggleNav}></div>
                 {showNav && (
                     <div className={`nav-box ${showNav ? 'show' : ''}`}>
-                        <Link to="/dashboard"><a>All Projects</a></Link>
-                        <Link onClick={handleCloseLogin}><a>Login</a></Link>
-                        <Link onClick={handleCloseRegister}><a>Register</a></Link>
+                        <Link to="/dashboard">All Projects</Link>
+                        <Link onClick={handleCloseLogin}>Login</Link>
+                        <Link onClick={handleCloseRegister}>Register</Link>
                     </div>
                 )}
             </div>
