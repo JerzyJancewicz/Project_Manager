@@ -1,16 +1,18 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import { useNavigate } from 'react-router-dom';
 import DeleteAlert from "./Alerts/DeleteAlert";
+import { AuthContext } from './UserCmp/AuthContext';
 
 function Project(props){
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditBoxOpen, setIsEditBoxOpen] = useState(false);
+  const token = useContext(AuthContext);
 
   const [alertMessage, setAlertMessage] = useState("Are you sure you want to delete this project?");
 
   const navigate = useNavigate("/dashboard");
   const handleDelete = (Id) => {
-    fetch(`/api/Project/${Id}`, {
+    fetch(`/api/Project/${Id}/${token}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

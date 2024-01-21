@@ -10,10 +10,11 @@ namespace ApiService1.Repositories
     public interface IProjectRepository
     {
         public Task<List<Project>> GetAll();
-        public Task Create(Project project, ProjectDetails projectDetails);
+        public Task Create(Project project, ProjectDetails projectDetails, string email);
         public Task Update(int Id, ProjectDetails projectDetails);
         public Task Delete(int Id);
         public Task<Project?> GetProjectById(int Id);
+        public Task<List<Project>> GetProjects(string email);
     }
     public class ProjectRepository : IProjectRepository
     {
@@ -41,7 +42,7 @@ namespace ApiService1.Repositories
                 return projects;
             }
         }
-        public async Task Create(Project project, ProjectDetails projectDetails)
+        public async Task Create(Project project, ProjectDetails projectDetails, string email)
         {
             using (var context = _context.CreateDbContext())
             {
@@ -50,8 +51,19 @@ namespace ApiService1.Repositories
 
                 project.SetCreatedAt();
                 project.ProjectDetailsIdProjectDetails = projectDetails.IdProjectDetails;
-
+                
                 context.Project.Add(project);
+                await context.SaveChangesAsync();
+
+                var user = await context.User.FirstOrDefaultAsync(e => e.Email == email);
+                if (user is not null)
+                {
+                    context.UserProject.Add(new UserProject()
+                    {
+                        UserId = user.Id,
+                        ProjectId = project.IdProject
+                    });
+                }
                 await context.SaveChangesAsync();
             }
         }
@@ -93,6 +105,37 @@ namespace ApiService1.Repositories
             using (var context = _context.CreateDbContext())
             {
                 return await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
+            }
+        }
+
+        public async Task<List<Project>> GetProjects(string email)
+        {
+            using (var context = _context.CreateDbContext())
+            {
+                var projects = new List<Project>();
+                var user = await context.User.FirstOrDefaultAsync(e => e.Email == email);
+                if (user is not null)
+                {
+                    var userProjects = await context.UserProject.Where(e => e.UserId == user.Id).ToListAsync();
+                    if (userProjects is not null)
+                    {
+                        foreach (var project in userProjects)
+                        {
+                            var userProject = await context.Project.FirstOrDefaultAsync(e => e.IdProject == project.ProjectId);
+                            projects.Add(userProject);
+                        }
+                    }
+                }
+                var projectDetails = await context.ProjectDetails.ToListAsync();
+                foreach (var project in projects)
+                {
+                    var currentProjectDetails = projectDetails.FirstOrDefault(src => src.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
+                    if (currentProjectDetails != null)
+                    {
+                        project.IdProjectDetailsNavigation = currentProjectDetails;
+                    }
+                }
+                return projects;
             }
         }
     }

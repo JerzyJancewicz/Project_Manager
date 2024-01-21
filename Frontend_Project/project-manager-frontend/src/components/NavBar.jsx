@@ -40,7 +40,7 @@ function NavBar(){
                     <Link to="/" className="link-no-decoration"><h3 className="heading-2">ManageIT</h3></Link>
                 </a>
                 <nav role="navigation" className="nav-menu w-nav-menu">
-                    <Link to="/dashboard" className="nav-link text-xs text-height-base text-white tracking-normal w-nav-link">All Projects</Link>
+                    <Link to="/" className="nav-link text-xs text-height-base text-white tracking-normal w-nav-link">Home</Link>
                     <Link className="nav-link text-xs text-height-base text-white tracking-normal w-nav-link" onClick={handleCloseLogin}>Login</Link>
                     <Link className="nav-link text-xs text-height-base text-white tracking-normal w-nav-link" onClick={handleCloseRegister}>Register</Link>
                 </nav>

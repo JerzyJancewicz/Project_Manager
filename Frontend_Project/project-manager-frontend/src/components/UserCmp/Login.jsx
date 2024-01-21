@@ -1,5 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, createContext} from 'react';
+import { useNavigate } from 'react-router-dom';
 import Img from "../../styles/images/project-manager_69759.png"
+
+export const AuthContext = createContext();
+
 const Login = (props) => {
   const[isOpen, setIsOpen] = useState(false);
   const[email, setEmail] = useState("");
@@ -7,11 +11,37 @@ const Login = (props) => {
   const[emailError, setEmailError] = useState("");
   const[passwordError, setPasswordError] = useState("");
 
+  const navigate = useNavigate();
+
   const handleLogin = (event) => {
     event.preventDefault();
-    
-    
-  };
+    fetch(`/api/Accounts/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    })
+    .then(response => {
+      if(response.ok){
+        navigate("/dashboard");
+        setIsOpen(!isOpen);
+        props.onClose(isOpen);
+        return response.json();
+      }else{
+        console.log("dupa");
+      }
+    })
+    .then((data) => {
+        sessionStorage.setItem('token', data.token);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);

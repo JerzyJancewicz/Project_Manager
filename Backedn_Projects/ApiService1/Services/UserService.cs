@@ -8,11 +8,11 @@ namespace ApiService1.Services
 {
     public interface IUserService
     {
-        Task<List<UserGET>> GetUsers();
-        Task<UserGET> GetUser(string Id);
-        Task<bool> UserExists(string Id);
-        Task<bool> CreateUser(UserCreate userCreate);
-        Task<bool> UserExistsByEmail(string email);
+        public Task<List<UserGET>> GetUsers();
+        public Task<UserGET> GetUser(string Id);
+        public Task<bool> UserExists(string Id);
+        public Task<bool> CreateUser(UserCreate userCreate);
+        public Task<bool> UserExistsByEmail(string email);
     }
 
     public class UserService : IUserService

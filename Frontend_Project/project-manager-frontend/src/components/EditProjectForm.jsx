@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { AuthContext } from './UserCmp/AuthContext';
 
 const EditProjectForm = () => {
     const location = useLocation();
     const { Id } = useParams();
-
+    const token = useContext(AuthContext);
     const [description, setDescription] = useState(location.state?.description || "Faile to load description");
 
     const navigate = useNavigate("/dashboard");
@@ -13,7 +14,7 @@ const EditProjectForm = () => {
     };
 
     const handleUpdate = () => {
-        fetch(`/api/Project/${Id}`, {
+        fetch(`/api/Project/${Id}/${token}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

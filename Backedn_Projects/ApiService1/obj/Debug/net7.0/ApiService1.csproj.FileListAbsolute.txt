@@ -88,3 +88,4 @@ F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debu
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.Extensions.Identity.Core.dll
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.Extensions.Identity.Stores.dll
 F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.Extensions.Options.dll
+F:\PROJEKTY\WebApiProjects\Project_Manager\Backedn_Projects\ApiService1\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

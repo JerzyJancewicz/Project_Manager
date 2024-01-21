@@ -1,14 +1,16 @@
-import React, { useEffect,  useState } from "react";
+import React, { useEffect,  useState, useContext } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import Project from "./Project";
 import FailedToLoadData from "./Errors/FaileToLoadData"
 import ConfirmationAlert from "./Alerts/ConfirmationAlert";
+import { AuthContext } from './UserCmp/AuthContext';
 
 function ProjectDashboard(){
     const[projectData, setProjectData] = useState([]);
     const[isFailedToLoad, setIsFailedToLoad] = useState(false);
     const[isProjectChanged, setIsProjectChanged] = useState(false);
     const[message, setMessage] = useState("message");
+    const token = useContext(AuthContext);
 
     const navigate = useNavigate("/dashboard");
     //const location = useLocation();
@@ -18,7 +20,7 @@ function ProjectDashboard(){
     }, []);
 
     const handleGet = () => {
-        fetch('/api/Project')
+        fetch(`/api/Project/${token}`)
             .then((res) => {
                 return res.json();
             })
@@ -77,19 +79,23 @@ function ProjectDashboard(){
                 <div className="div-block">
                     <button data-w-id="2333b2d0-c779-4514-db04-d3dbf49952ad" className="addbutton w-button" onClick={handleCreate}>Add Project</button>
                     <div className="div-block-2">
-                        {projectData.map((data) => (
-                            <Project 
-                                key = {data.idProject}
-                                title = {data.title}
-                                description = {data.description}
-                                createdAt = {data.createAt}
-                                lastModified = {data.lastModified} 
-                                Id = {data.idProject}
-                                messageOnAction = {handleMessageOnAction}
-                                onDelete ={handleProjectDelete}
-                                isDeleted = {handleIsDeleted}
-                            />
-                        ))}
+                        {Array.isArray(projectData) ? (
+                            projectData.map((data) => (
+                                <Project 
+                                    key = {data.idProject}
+                                    title = {data.title}
+                                    description = {data.description}
+                                    createdAt = {data.createAt}
+                                    lastModified = {data.lastModified} 
+                                    Id = {data.idProject}
+                                    messageOnAction = {handleMessageOnAction}
+                                    onDelete ={handleProjectDelete}
+                                    isDeleted = {handleIsDeleted}
+                                />
+                            ))
+                        ) : (
+                            <div>No projects available.</div>
+                        )}
                     </div>
                 </div>
             </div>
