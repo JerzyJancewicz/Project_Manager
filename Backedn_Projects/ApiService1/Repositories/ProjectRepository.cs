@@ -15,6 +15,7 @@ namespace ApiService1.Repositories
         public Task Delete(int Id);
         public Task<Project?> GetProjectById(int Id);
         public Task<List<Project>> GetProjects(string email);
+        public Task<bool> GetProjectByEmail(string email);
     }
     public class ProjectRepository : IProjectRepository
     {
@@ -136,6 +137,20 @@ namespace ApiService1.Repositories
                     }
                 }
                 return projects;
+            }
+        }
+
+        public async Task<bool> GetProjectByEmail(string email)
+        {
+            using (var context = _context.CreateDbContext())
+            {
+                var user = await context.User.FirstOrDefaultAsync(e => e.Email == email);
+                if (user is not null) 
+                {
+                    var isProject = await context.UserProject.AnyAsync(e => e.UserId == user.Id);
+                    return isProject;
+                }
+                return false;
             }
         }
     }

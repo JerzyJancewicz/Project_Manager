@@ -7,7 +7,7 @@ function NotFound(){
             <div class="utility-page-content">
                 <img src={Img} loading="lazy" width="52" alt="" className="company-logo"/>
                 <h2>Page Not Found</h2>
-                <div>The page you are looking for doesn't exist or has been moved</div>
+                <div>The page you are looking for doesn't exists or has been moved</div>
             </div>
         </div>
     );

@@ -1,16 +1,15 @@
-import React, { useEffect,  useState, useContext } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect,  useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import Project from "./Project";
 import FailedToLoadData from "./Errors/FaileToLoadData"
 import ConfirmationAlert from "./Alerts/ConfirmationAlert";
-import { AuthContext } from './UserCmp/AuthContext';
 
 function ProjectDashboard(){
     const[projectData, setProjectData] = useState([]);
     const[isFailedToLoad, setIsFailedToLoad] = useState(false);
     const[isProjectChanged, setIsProjectChanged] = useState(false);
     const[message, setMessage] = useState("message");
-    const token = useContext(AuthContext);
+    const token = sessionStorage.getItem('token');
 
     const navigate = useNavigate("/dashboard");
     //const location = useLocation();
@@ -25,7 +24,6 @@ function ProjectDashboard(){
                 return res.json();
             })
             .then((data) => {
-                console.log(data);
                 setProjectData(data);
             })
             .catch(error =>{

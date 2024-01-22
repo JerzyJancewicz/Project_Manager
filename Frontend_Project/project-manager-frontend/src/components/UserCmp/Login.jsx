@@ -1,15 +1,14 @@
-import React, {useState, createContext} from 'react';
+import React, {useState, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Img from "../../styles/images/project-manager_69759.png"
-
-export const AuthContext = createContext();
+import AuthContext from './AuthContext';
 
 const Login = (props) => {
   const[isOpen, setIsOpen] = useState(false);
   const[email, setEmail] = useState("");
   const[password, setPassword] = useState("");
-  const[emailError, setEmailError] = useState("");
-  const[passwordError, setPasswordError] = useState("");
+  const[loginError, setLoginError] = useState(false);
+  const authCtx = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -27,16 +26,16 @@ const Login = (props) => {
     })
     .then(response => {
       if(response.ok){
-        navigate("/dashboard");
-        setIsOpen(!isOpen);
-        props.onClose(isOpen);
         return response.json();
       }else{
-        console.log("dupa");
+        setLoginError(true);
       }
     })
     .then((data) => {
-        sessionStorage.setItem('token', data.token);
+        authCtx.login(data.token);
+        setIsOpen(!isOpen);
+        props.onClose(isOpen);
+        navigate("/dashboard");
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -58,7 +57,7 @@ const Login = (props) => {
         <div className="login-modal">
         <div className='login-modal-grid'>
             <button className="close-button" onClick={handleClose}>Close</button>
-            <img Id="login-image" src={Img} loading="lazy" width="200" alt="" />
+            <img id="login-image" src={Img} loading="lazy" width="200" alt="" />
         </div>
             <form className="login-form" onSubmit={handleLogin}>
               <h2 className="login-form-heading">Login</h2>
@@ -70,7 +69,6 @@ const Login = (props) => {
                 value={email}
                 onChange={handleEmailChange}
               />
-              {emailError && <div style={{ color: 'red' }}><p>{emailError}</p></div>}
               <label htmlFor="loginPassword">Password</label>
               <input
                 type="password"
@@ -79,8 +77,8 @@ const Login = (props) => {
                 value={password}
                 onChange={handlePasswordChange}
               />
-              {passwordError && <div style={{ color: 'red' }}><p>{passwordError}</p></div>}
               <button type="submit" className="save-button">Login</button>
+              {loginError && <div style={{ color: 'red', fontSize: '1rem', lineHeight: '1.2rem', fontWeight: 'bold', marginTop: "10px" }}>Check your email or password and try again</div>}
             </form>
         </div>
     </div>

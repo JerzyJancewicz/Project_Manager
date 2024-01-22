@@ -56,7 +56,6 @@ namespace ApiService1.Controllers
                 return Unauthorized();
             }
             var userEmail = GetUsersEmail(key);
-            Console.WriteLine("cosocssco" + userEmail); 
             await _service.CreateProject(project, userEmail);
             return Created("", "");
         }
@@ -69,6 +68,11 @@ namespace ApiService1.Controllers
                 _authorizeService.AuthorizeToken(key);
             }
             catch
+            {
+                return Unauthorized();
+            }
+            var userEmail = GetUsersEmail(key);
+            if (!await _service.ProjectExistsByEmail(userEmail))
             {
                 return Unauthorized();
             }
@@ -88,6 +92,11 @@ namespace ApiService1.Controllers
                 _authorizeService.AuthorizeToken(key);
             }
             catch
+            {
+                return Unauthorized();
+            }
+            var userEmail = GetUsersEmail(key);
+            if (!await _service.ProjectExistsByEmail(userEmail))
             {
                 return Unauthorized();
             }

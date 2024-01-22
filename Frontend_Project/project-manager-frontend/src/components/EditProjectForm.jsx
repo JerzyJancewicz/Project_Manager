@@ -1,11 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { AuthContext } from './UserCmp/AuthContext';
 
 const EditProjectForm = () => {
     const location = useLocation();
     const { Id } = useParams();
-    const token = useContext(AuthContext);
+    const token = sessionStorage.getItem('token');
     const [description, setDescription] = useState(location.state?.description || "Faile to load description");
 
     const navigate = useNavigate("/dashboard");

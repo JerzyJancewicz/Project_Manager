@@ -1,11 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from './UserCmp/AuthContext';
 // "proxy": "http://localhost:5019/",
 const EditProjectForm = () => {
     const [description, setDescription] = useState("Project Description");
     const [title, setTitle] = useState("Project Title");
-    const token = useContext(AuthContext);
+    const token = sessionStorage.getItem('token');
 
     const navigate = useNavigate("/dashboard");
 
@@ -13,7 +12,6 @@ const EditProjectForm = () => {
         setDescription(event.target.value);
     };
     const handleTitleChange = (event) =>{
-        console.log(token);
         setTitle(event.target.value);
     }
 

@@ -14,6 +14,7 @@ namespace ApiService1.Services
         public Task DeleteProject(int Id);
         public Task<bool> ProjectExists(int Id);
         public Task<List<ProjectGET>> GetProjectsByEmail(string email);
+        public Task<bool> ProjectExistsByEmail(string email);
     }
 
     public class ProjectService : IProjectService
@@ -51,7 +52,7 @@ namespace ApiService1.Services
         {
             var projectDetails = _mapper.Map<ProjectDetails>(projectUpdate);
             var project = _repository.GetProjectById(Id);
-            if (project != null)
+            if (project is not null)
             {
                 await _repository.Update(Id, projectDetails);
             }
@@ -60,7 +61,7 @@ namespace ApiService1.Services
         public async Task DeleteProject(int Id)
         {
             var project = _repository.GetProjectById(Id);
-            if (project != null)
+            if (project is not null)
             {
                 await _repository.Delete(Id);
             }
@@ -69,7 +70,7 @@ namespace ApiService1.Services
         public async Task<bool> ProjectExists(int Id)
         {
             var project = await _repository.GetProjectById(Id);
-            return project != null;
+            return project is not null;
         }
 
         public async Task<List<ProjectGET>> GetProjectsByEmail(string email)
@@ -79,6 +80,11 @@ namespace ApiService1.Services
 
             return projectsDto;
 
+        }
+
+        public async Task<bool> ProjectExistsByEmail(string email)
+        {
+            return !await _repository.GetProjectByEmail(email);
         }
     }
 }
