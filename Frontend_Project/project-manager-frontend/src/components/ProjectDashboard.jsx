@@ -12,8 +12,6 @@ function ProjectDashboard(){
     const token = sessionStorage.getItem('token');
 
     const navigate = useNavigate("/dashboard");
-    //const location = useLocation();
-    //const isCreated = location.state?.isCreated || false;
     useEffect(() => { 
         handleGet();
     }, []);
@@ -51,7 +49,7 @@ function ProjectDashboard(){
     }
 
     useEffect(() => {
-        if(isProjectChanged){ // || isCreated
+        if(isProjectChanged){
             const timer = setTimeout(() => {
                 setIsProjectChanged(false);
             }, 2000)

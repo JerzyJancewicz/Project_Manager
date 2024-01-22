@@ -1,8 +1,13 @@
-import React from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ProjectDetails = () => {
-    const location = useLocation();
+    const [description, setDescription] = useState("");
+    const [title, setTitle] = useState("");
+    const [lastModified, setLastModified] = useState("");
+    const [createdAt, setCreatedAt] = useState("");
+    
+    const token = sessionStorage.getItem('token');
     const navigate = useNavigate("/dashboard");
     const {Id} = useParams();
 
@@ -10,14 +15,30 @@ const ProjectDetails = () => {
         navigate('/dashboard')
     };
 
+    useEffect(() => {
+        fetch(`/api/Project/${Id}/${token}`)
+            .then((res) => {
+                if(res.ok){
+                    return res.json();
+                }else if(res.status === 401){
+                    navigate('/no-access');
+                }else{
+                    navigate("/")
+                }
+            })
+            .then((data) => {
+                setTitle(data.title);
+                setDescription(data.description);
+                setCreatedAt(data.createAt);
+                setLastModified(data.lastModified);
+            })
+            .catch(error =>{
+                console.log(error);
+            });
+    }, [])
+
     const handleEdit = () => {
-        navigate(`/edit-project/${Id}`,
-        { state: {
-            title: location.state?.title || "Failed to load title", 
-            description: location.state?.description || "Failed to load description" ,
-            createdAt : location.state?.createdAt || "Failed to load creation date",
-            lastModified : location.state?.lastModified || "Failed to load last modification date"
-        }});
+        navigate(`/edit-project/${Id}`)
     };
 
     return (
@@ -25,10 +46,10 @@ const ProjectDetails = () => {
             <div className="details-container">
                 <h2 className="details-heading">Project Details</h2>
                 <div className="details-content">
-                    <p><strong>Title: </strong>{ location.state?.title || "Failed to load title"}</p>
-                    <p><strong>Description: </strong>{location.state?.description || "Failed to load description"}</p>
-                    <p><strong>Created At: </strong>{location.state?.createdAt || "Failed to load creation date"}</p>
-                    <p><strong>Last Modified: </strong>{location.state?.lastModified || "Failed to load last modification date"}</p>
+                    <p><strong>Title: </strong>{title}</p>
+                    <p><strong>Description: </strong>{description}</p>
+                    <p><strong>Created At: </strong>{createdAt}</p>
+                    <p><strong>Last Modified: </strong>{lastModified}</p>
                 </div>
                 <div className="details-buttons">
                     <button onClick={handleReturn}>Return</button>

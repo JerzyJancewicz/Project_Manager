@@ -29,6 +29,8 @@ const EditProjectForm = () => {
         .then(response => {
             if(response.ok){
                 navigate("/dashboard", {state:{isCreated: true}});
+            }else{
+                navigate('/');
             }
         })
         .catch((error) => {

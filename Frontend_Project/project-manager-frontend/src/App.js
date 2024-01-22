@@ -5,6 +5,7 @@ import ProjectDashboard from './components/ProjectDashboard';
 import StyleComp from './components/StyleComp';
 import EditProjectForm from './components/EditProjectForm';
 import NotFound from './components/Errors/NotFound';
+import NoAccess from './components/Errors/NoAccess'
 import CreateProjectForm from "./components/CreateProjectForm"
 import ProjectDetails from "./components/ProjectDetails"
 import Home from './components/Home';
@@ -13,7 +14,7 @@ import AuthContext from './components/UserCmp/AuthContext';
 
 const ConditionalStyleComp = () => {
   const location = useLocation();
-  if (location.pathname !== "/") {
+  if (location.pathname !== "/" && location.pathname !== "/no-access" && location.pathname !== "*") {
       return <StyleComp />;
   }
   return null;
@@ -53,7 +54,7 @@ function App() {
               <Route path="/create-project" element={<ProtectedRoute><CreateProjectForm /></ProtectedRoute>} />
               <Route path="/details-project/:Id" element={<ProtectedRoute><ProjectDetails /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />}/>
-              <Route path='/no-access' element={<NotFound/>}></Route>
+              <Route path='/no-access' element={<NoAccess/>}></Route>
             </Routes>
             <ConditionalStyleComp/>
         </Router>

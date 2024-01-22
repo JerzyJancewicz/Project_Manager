@@ -44,6 +44,25 @@ namespace ApiService1.Controllers
             return Ok(await _service.GetProjectsByEmail(userEmail));
         }
 
+        [HttpGet("{Id}/{key}")]
+        public async Task<IActionResult> GetProjectById(string key, int Id)
+        {
+            try
+            {
+                _authorizeService.AuthorizeToken(key);
+            }
+            catch
+            {
+                return Unauthorized();
+            }
+            var userEmail = GetUsersEmail(key);
+            if (!await _service.UserContainsProjectById(userEmail, Id))
+            {
+                return Unauthorized();
+            }
+            return Ok(await _service.GetProjectContainingDetailsById(Id));
+        }
+
         [HttpPost("{key}")]
         public async Task<IActionResult> CreateProject(ProjectCreate project, string key)
         {

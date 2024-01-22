@@ -39,7 +39,7 @@ namespace ApiService1.Controllers
             });
         }
 
-        /*[HttpPost("refresh")]
+/*        [HttpPost("refresh")]
         public IActionResult RefreshToken(RefreshTokenDto dto)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

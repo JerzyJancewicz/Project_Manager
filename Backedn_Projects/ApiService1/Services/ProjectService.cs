@@ -15,6 +15,9 @@ namespace ApiService1.Services
         public Task<bool> ProjectExists(int Id);
         public Task<List<ProjectGET>> GetProjectsByEmail(string email);
         public Task<bool> ProjectExistsByEmail(string email);
+        public Task<ProjectGET> GetProjectsById(int id);
+        public Task<bool> UserContainsProjectById(string email, int Id);
+        public Task<ProjectGET> GetProjectContainingDetailsById(int Id);
     }
 
     public class ProjectService : IProjectService
@@ -51,7 +54,7 @@ namespace ApiService1.Services
         public async Task UpdateProject(int Id, ProjectUpdate projectUpdate)
         {
             var projectDetails = _mapper.Map<ProjectDetails>(projectUpdate);
-            var project = _repository.GetProjectById(Id);
+            var project = _repository.GetProject(Id);
             if (project is not null)
             {
                 await _repository.Update(Id, projectDetails);
@@ -60,7 +63,7 @@ namespace ApiService1.Services
 
         public async Task DeleteProject(int Id)
         {
-            var project = _repository.GetProjectById(Id);
+            var project = _repository.GetProject(Id);
             if (project is not null)
             {
                 await _repository.Delete(Id);
@@ -69,7 +72,7 @@ namespace ApiService1.Services
 
         public async Task<bool> ProjectExists(int Id)
         {
-            var project = await _repository.GetProjectById(Id);
+            var project = await _repository.GetProject(Id);
             return project is not null;
         }
 
@@ -84,7 +87,28 @@ namespace ApiService1.Services
 
         public async Task<bool> ProjectExistsByEmail(string email)
         {
-            return !await _repository.GetProjectByEmail(email);
+            return await _repository.GetProjectByEmail(email);
+        }
+
+        public async Task<ProjectGET> GetProjectsById(int id)
+        {
+            var project = await _repository.GetProject(id);
+            var projectDto = _mapper.Map<ProjectGET>(project);
+
+            return projectDto;
+        }
+
+        public async Task<bool> UserContainsProjectById(string email, int Id)
+        {
+            return await _repository.UserContainsProject(email, Id);
+        }
+
+        public async Task<ProjectGET> GetProjectContainingDetailsById(int Id)
+        {
+            var project = await _repository.GetProjectContainingDetails(Id);
+            var projectDto = _mapper.Map<ProjectGET>(project);
+
+            return projectDto;
         }
     }
 }

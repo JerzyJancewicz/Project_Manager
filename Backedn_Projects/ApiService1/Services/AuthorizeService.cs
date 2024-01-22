@@ -53,7 +53,7 @@ namespace ApiService1.Services
                 }),
                 Issuer = _config["JWT:Issuer"],
                 Audience = _config["JWT:Audience"],
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddMinutes(45),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]!)),
                     SecurityAlgorithms.HmacSha256

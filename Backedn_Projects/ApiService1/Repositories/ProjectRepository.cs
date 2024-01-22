@@ -13,9 +13,11 @@ namespace ApiService1.Repositories
         public Task Create(Project project, ProjectDetails projectDetails, string email);
         public Task Update(int Id, ProjectDetails projectDetails);
         public Task Delete(int Id);
-        public Task<Project?> GetProjectById(int Id);
+        public Task<Project?> GetProject(int Id);
         public Task<List<Project>> GetProjects(string email);
         public Task<bool> GetProjectByEmail(string email);
+        public Task<Project?> GetProjectContainingDetails(int Id);
+        public Task<bool> UserContainsProject(string email, int Id);
     }
     public class ProjectRepository : IProjectRepository
     {
@@ -101,7 +103,7 @@ namespace ApiService1.Repositories
             }
         }
 
-        public async Task<Project?> GetProjectById(int Id)
+        public async Task<Project?> GetProject(int Id)
         {
             using (var context = _context.CreateDbContext())
             {
@@ -149,6 +151,40 @@ namespace ApiService1.Repositories
                 {
                     var isProject = await context.UserProject.AnyAsync(e => e.UserId == user.Id);
                     return isProject;
+                }
+                return false;
+            }
+        }
+
+        public async Task<Project?> GetProjectContainingDetails(int Id)
+        {
+
+            using (var context = _context.CreateDbContext())
+            {
+                var project = await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
+                
+                if (project is not null)
+                {
+                    var currentProjectDetails = await context.ProjectDetails.FirstOrDefaultAsync(src => src.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
+                    if (currentProjectDetails != null)
+                    {
+                        project.IdProjectDetailsNavigation = currentProjectDetails;
+                    }
+                }
+                return project;
+            }
+        }
+
+        public async Task<bool> UserContainsProject(string email, int id)
+        {
+            using (var context = _context.CreateDbContext())
+            {
+                var user = await context.User.FirstOrDefaultAsync(e => e.Email == email);
+                if (user is not null)
+                {
+                    var userProjects = await context.UserProject.Where(e => e.UserId == user.Id).ToListAsync();
+                    var isUserProject = userProjects.Any(e => e.ProjectId == id);
+                    return isUserProject;
                 }
                 return false;
             }
