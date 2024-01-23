@@ -8,12 +8,12 @@ namespace ApiService1.Services
 
     public interface IProjectService
     {
-        public Task<List<ProjectGET>> GetAllProjects();
+        public Task<List<ProjectGET>> GetAllProjects(int page, int pageSize);
         public Task CreateProject(ProjectCreate projectCreate, string email);
         public Task UpdateProject(int Id, ProjectUpdate projectUpdate);
         public Task DeleteProject(int Id);
         public Task<bool> ProjectExists(int Id);
-        public Task<List<ProjectGET>> GetProjectsByEmail(string email);
+        public Task<List<ProjectGET>> GetProjectsByEmail(string email, int page, int pageSize);
         public Task<bool> ProjectExistsByEmail(string email);
         public Task<ProjectGET> GetProjectsById(int id);
         public Task<bool> UserContainsProjectById(string email, int Id);
@@ -31,9 +31,9 @@ namespace ApiService1.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ProjectGET>> GetAllProjects()
+        public async Task<List<ProjectGET>> GetAllProjects(int page, int pageSize)
         {
-            var projects = await _repository.GetAll();
+            var projects = await _repository.GetAll(page, pageSize);
             var dtos = _mapper.Map<List<ProjectGET>>(projects);
             return dtos;
         }
@@ -76,9 +76,9 @@ namespace ApiService1.Services
             return project is not null;
         }
 
-        public async Task<List<ProjectGET>> GetProjectsByEmail(string email)
+        public async Task<List<ProjectGET>> GetProjectsByEmail(string email, int page, int pageSize)
         {
-            var projects = await _repository.GetProjects(email);
+            var projects = await _repository.GetProjects(email, page, pageSize);
             var projectsDto = _mapper.Map<List<ProjectGET>>(projects);
 
             return projectsDto;

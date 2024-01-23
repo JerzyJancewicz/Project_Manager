@@ -10,7 +10,7 @@ namespace ApiService1.Services
     public interface IAuthorizeService
     {
         public SecurityToken AuthorizeToken(string key);
-        public string RefreshToken(string userEmail);
+        public string RefreshToken(string userEmail, string role);
         public string RefreshRefToken(string userEmail);
         public Task<bool> UserPasswordMatches(UserLogin userLogin);
     }
@@ -42,14 +42,15 @@ namespace ApiService1.Services
             return validatedToken;
         }
 
-        public string RefreshToken(string userEmail)
+        public string RefreshToken(string userEmail, string role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescription = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Email, userEmail)
+                    new Claim(ClaimTypes.Email, userEmail),
+                    new Claim(ClaimTypes.Role, role)
                 }),
                 Issuer = _config["JWT:Issuer"],
                 Audience = _config["JWT:Audience"],

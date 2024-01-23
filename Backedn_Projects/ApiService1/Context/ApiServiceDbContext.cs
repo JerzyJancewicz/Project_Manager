@@ -21,18 +21,11 @@ namespace ApiService1.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-/*            modelBuilder.Entity<User>()
-                .HasKey(e => e.IdUser);*/
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.IdUserDetailsNavigation)
                 .WithMany(ud => ud.Users)
                 .HasForeignKey(u => u.UserIdUser);
-
-/*            modelBuilder.Entity<User>()
-                .HasOne(u => u.IdRoleNavigation)
-                .WithMany(r => r.Users)
-                .HasForeignKey(u => u.RoleIdRole);*/
 
             modelBuilder.Entity<UserProject>()
                 .HasKey(up => new { up.UserId, up.ProjectId });
@@ -57,9 +50,6 @@ namespace ApiService1.Context
 
             modelBuilder.Entity<ProjectDetails>()
                 .HasKey(e => e.IdProjectDetails);
-
-/*            modelBuilder.Entity<Role>()
-                .HasKey(e => e.Id);*/
 
             modelBuilder.Entity<UserDetails>()
                 .HasKey(e => e.IdUserDetails);

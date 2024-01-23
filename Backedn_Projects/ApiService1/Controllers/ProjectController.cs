@@ -28,9 +28,16 @@ namespace ApiService1.Controllers
             var emailClaim = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "email");
             return emailClaim?.Value;
         }
+        private string GetUsersRole(string key)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(key) as JwtSecurityToken;
+            var roleClaim = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "role");
+            return roleClaim?.Value;
+        }
 
         [HttpGet("{key}")]
-        public async Task<IActionResult> GetProject(string key)
+        public async Task<IActionResult> GetProject(string key, int page, int pageSize)
         {
             try
             {
@@ -41,7 +48,12 @@ namespace ApiService1.Controllers
                 return Unauthorized();
             }
             var userEmail = GetUsersEmail(key);
-            return Ok(await _service.GetProjectsByEmail(userEmail));
+            var userRole = GetUsersRole(key);
+            if (userRole == "admin")
+            {
+                return Ok(await _service.GetAllProjects(page, pageSize));
+            }
+            return Ok(await _service.GetProjectsByEmail(userEmail, page, pageSize));
         }
 
         [HttpGet("{Id}/{key}")]
@@ -56,7 +68,8 @@ namespace ApiService1.Controllers
                 return Unauthorized();
             }
             var userEmail = GetUsersEmail(key);
-            if (!await _service.UserContainsProjectById(userEmail, Id))
+            var userRole = GetUsersRole(key);
+            if (!await _service.UserContainsProjectById(userEmail, Id) && userRole != "admin")
             {
                 return Unauthorized();
             }
@@ -91,7 +104,8 @@ namespace ApiService1.Controllers
                 return Unauthorized();
             }
             var userEmail = GetUsersEmail(key);
-            if (!await _service.ProjectExistsByEmail(userEmail))
+            var userRole = GetUsersRole(key);
+            if (!await _service.ProjectExistsByEmail(userEmail) && userRole != "admin")
             {
                 return Unauthorized();
             }
@@ -115,7 +129,8 @@ namespace ApiService1.Controllers
                 return Unauthorized();
             }
             var userEmail = GetUsersEmail(key);
-            if (!await _service.ProjectExistsByEmail(userEmail))
+            var userRole = GetUsersRole(key);
+            if (!await _service.ProjectExistsByEmail(userEmail) && userRole != "admin")
             {
                 return Unauthorized();
             }

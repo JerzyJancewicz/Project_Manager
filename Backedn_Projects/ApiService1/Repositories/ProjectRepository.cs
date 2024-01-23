@@ -9,12 +9,12 @@ namespace ApiService1.Repositories
 
     public interface IProjectRepository
     {
-        public Task<List<Project>> GetAll();
+        public Task<List<Project>> GetAll(int page, int pageSize);
         public Task Create(Project project, ProjectDetails projectDetails, string email);
         public Task Update(int Id, ProjectDetails projectDetails);
         public Task Delete(int Id);
         public Task<Project?> GetProject(int Id);
-        public Task<List<Project>> GetProjects(string email);
+        public Task<List<Project>> GetProjects(string email, int page, int pageSize);
         public Task<bool> GetProjectByEmail(string email);
         public Task<Project?> GetProjectContainingDetails(int Id);
         public Task<bool> UserContainsProject(string email, int Id);
@@ -28,7 +28,7 @@ namespace ApiService1.Repositories
             _context = context;
         }
 
-        public async Task<List<Project>> GetAll()
+        public async Task<List<Project>> GetAll(int page, int pageSize)
         {
             using (var context = _context.CreateDbContext())
             {
@@ -36,13 +36,16 @@ namespace ApiService1.Repositories
                 var projectDetails = await context.ProjectDetails.ToListAsync();
                 foreach (var project in projects)
                 {
+                    project.LastModified.ToString("yyyy-MM-dd : HH:mm:ss");
+                    project.CreatedAt.ToString("yyyy-MM-dd : HH:mm:ss");
                     var currentProjectDetails = projectDetails.FirstOrDefault(src => src.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
                     if (currentProjectDetails != null)
                     {
                         project.IdProjectDetailsNavigation = currentProjectDetails;
                     }
                 }
-                return projects;
+                var paginatedProjects = projects.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                return paginatedProjects;
             }
         }
         public async Task Create(Project project, ProjectDetails projectDetails, string email)
@@ -78,6 +81,7 @@ namespace ApiService1.Repositories
                 var project = await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
                 if (project != null)
                 {
+                    project.LastModified = DateTime.UtcNow;
                     projectDetails.IdProjectDetails = project.ProjectDetailsIdProjectDetails;
                     context.ProjectDetails.Update(projectDetails);
                     await context.SaveChangesAsync();
@@ -107,11 +111,17 @@ namespace ApiService1.Repositories
         {
             using (var context = _context.CreateDbContext())
             {
-                return await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
+                var project = await context.Project.FirstOrDefaultAsync(e => e.IdProject == Id);
+                if (project != null)
+                {
+                    project.LastModified.ToString("yyyy-MM-dd : HH:mm:ss");
+                    project.CreatedAt.ToString("yyyy-MM-dd : HH:mm:ss");
+                }
+                return project;
             }
         }
 
-        public async Task<List<Project>> GetProjects(string email)
+        public async Task<List<Project>> GetProjects(string email, int page, int pageSize)
         {
             using (var context = _context.CreateDbContext())
             {
@@ -132,13 +142,17 @@ namespace ApiService1.Repositories
                 var projectDetails = await context.ProjectDetails.ToListAsync();
                 foreach (var project in projects)
                 {
+                    project.LastModified.ToString("yyyy-MM-dd : HH:mm:ss");
+                    project.CreatedAt.ToString("yyyy-MM-dd : HH:mm:ss");
                     var currentProjectDetails = projectDetails.FirstOrDefault(src => src.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
                     if (currentProjectDetails != null)
                     {
                         project.IdProjectDetailsNavigation = currentProjectDetails;
                     }
                 }
-                return projects;
+
+                var paginatedProjects = projects.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                return paginatedProjects;
             }
         }
 
@@ -170,6 +184,8 @@ namespace ApiService1.Repositories
                     {
                         project.IdProjectDetailsNavigation = currentProjectDetails;
                     }
+                    project.CreatedAt.ToString("yyyy-MM-dd : HH:mm:ss");
+                    project.LastModified.ToString("yyyy-MM-dd : HH:mm:ss");
                 }
                 return project;
             }

@@ -1,6 +1,7 @@
 ﻿using ApiService1.DTOs.UserDtos;
 using ApiService1.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ApiService1.Controllers
 {
@@ -15,20 +16,23 @@ namespace ApiService1.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        private string GetUsersEmail(string key)
         {
-            return Ok(await _userService.GetUsers());
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(key) as JwtSecurityToken;
+            var emailClaim = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "email");
+            return emailClaim?.Value;
         }
 
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> GetUsers(string Id)
+        [HttpGet("{token}")]
+        public async Task<IActionResult> GetUsers(string token)
         {
-            if (!await _userService.UserExists(Id))
+            var email = GetUsersEmail(token);
+            if (!await _userService.UserExists(email))
             {
                 return NotFound();
             }
-            return Ok(await _userService.GetUser(Id));
+            return Ok(await _userService.GetUser(email));
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
 ﻿using ApiService1.Context;
+using ApiService1.DTOs.RoleDtos;
 using ApiService1.DTOs.UserDtos;
 using ApiService1.Entities;
 using ApiService1.Services;
@@ -32,44 +33,13 @@ namespace ApiService1.Controllers
             if (!user || !await _service.UserPasswordMatches(dto))
                 return Unauthorized("Wrong username or password");
 
+            var userRole = await _userService.GetRoleByEmail(dto.Email);
+
             return Ok(new UserLoginResponse
             {
-                Token = _service.RefreshToken(dto.Email),
+                Token = _service.RefreshToken(dto.Email, userRole.Name),
                 RefreshToken = _service.RefreshRefToken(dto.Email)
             });
         }
-
-/*        [HttpPost("refresh")]
-        public IActionResult RefreshToken(RefreshTokenDto dto)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            try
-            {
-                tokenHandler.ValidateToken(dto.RefreshToken, new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = _config["JWT:RefIssuer"],
-                    ValidAudience = _config["JWT:RefAudience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:RefKey"]!))
-                }, out SecurityToken validatedToken);
-
-                var accessToken = _service.RefreshToken();
-                var refreshToken = _service.RefreshRefToken();
-
-                return Ok(new RefreshResponseDto
-                {
-                    Token = accessToken,
-                    RefreshToken = refreshToken
-                });
-            }
-            catch
-            {
-                return Unauthorized();
-            }
-        }*/
-
     }
 }

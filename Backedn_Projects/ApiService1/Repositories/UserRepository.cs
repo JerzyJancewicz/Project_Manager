@@ -7,11 +7,13 @@ namespace ApiService1.Repositories
 {
     public interface IUserRepository
     {
-        Task<List<User>> GetAllUsers();
-        Task<User?> GetUserById(string id);
-        Task<bool> UserExistsById(string id);
-        Task<bool> Create(User user, string password, UserDetails userDetails);
-        Task<bool> UserExistsByUsername(string email);
+        public Task<User?> GetUserById(string email);
+        public Task<bool> UserExistsById(string email);
+        public Task<bool> Create(User user, string password, UserDetails userDetails);
+        public Task<bool> UserExistsByUsername(string email);
+        public Task<Role?> GetRole(string email);
+
+
     }
     public class UserRepository : IUserRepository
     {
@@ -40,33 +42,19 @@ namespace ApiService1.Repositories
                 {
                     context.UserDetails.Remove(userDetails);
                     await context.SaveChangesAsync();
+                    return false;
                 }
+
+                await _userManager.AddToRoleAsync(user, "user");
                 return result.Succeeded;
             }
         }
 
-        public async Task<List<User>> GetAllUsers()
+        public async Task<User?> GetUserById(string email)
         {
             using (var contex = _context.CreateDbContext())
             {
-                var users = await contex.User.ToListAsync();
-                foreach (var user in users)
-                {
-                    var userDetails = await contex.UserDetails.FirstOrDefaultAsync(e => e.IdUserDetails == user.UserIdUser);
-                    if (userDetails is not null)
-                    {
-                        user.IdUserDetailsNavigation = userDetails;
-                    }
-                }
-                return users;
-            }
-        }
-
-        public async Task<User?> GetUserById(string id)
-        {
-            using (var contex = _context.CreateDbContext())
-            {
-                var user = await contex.User.FirstOrDefaultAsync(e => e.Id == id);
+                var user = await contex.User.FirstOrDefaultAsync(e => e.Email == email);
                 if (user is not null)
                 {
                     var userDetails = await contex.UserDetails.FirstOrDefaultAsync(e => e.IdUserDetails == user.UserIdUser);
@@ -88,14 +76,32 @@ namespace ApiService1.Repositories
             }
         }
 
-        public async Task<bool> UserExistsById(string id)
+        public async Task<bool> UserExistsById(string email)
         {
             using (var contex = _context.CreateDbContext())
             {
-                var user = await contex.User.FirstOrDefaultAsync(e => e.Id == id);
+                var user = await contex.User.FirstOrDefaultAsync(e => e.Email == email);
                 return user is not null;
             }
         }
 
+        public async Task<Role?> GetRole(string email)
+        {
+            using (var contex = _context.CreateDbContext())
+            {
+                var user = await contex.User.FirstOrDefaultAsync(e => e.Email == email);
+
+                if (user is not null)
+                {
+                    var userRole = await contex.UserRoles.FirstOrDefaultAsync(e => e.UserId == user.Id);
+                    if (userRole is not null)
+                    {
+                        var role = await contex.Role.FirstOrDefaultAsync(e => e.Id == userRole.RoleId);
+                        return role;
+                    }
+                }
+                return null;
+            }
+        }
     }
 }

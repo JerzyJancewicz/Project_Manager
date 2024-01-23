@@ -27,6 +27,9 @@ function NavBar(){
         // navigate after logout
         setTimeout(() => navigate("/"), 0);
     }
+    const handleRegister = (value) => {
+        setIsLogin(value);
+    }
 
     return (
         <div data-collapse="medium" role="banner" className="navbar-copy w-nav">
@@ -39,6 +42,7 @@ function NavBar(){
             {isRegister ? 
                 <Register
                     onClose = {handleCloseRegister}
+                    onRegister = {handleRegister}
                 /> : 
                 <></>
             }
@@ -73,7 +77,7 @@ function NavBar(){
                         </div>
                         <nav role="navigation" className="nav-menu w-nav-menu">
                             <Link to="/dashboard" className="nav-link text-xs text-height-base text-white tracking-normal w-nav-link">Projects</Link>
-                            <Link to="/user-details" className="nav-link text-xs text-height-base text-white tracking-normal w-nav-link">email@email.com</Link>
+                            <Link to="/details-user" className="nav-link text-xs text-height-base text-white tracking-normal w-nav-link">email@email.com</Link>
                             <Link className="nav-link text-xs text-height-base text-white tracking-normal w-nav-link" onClick={handleLogout}>Logout</Link>
                         </nav>
                         <div className="menu-button w-nav-button" onClick={toggleNav}>
@@ -83,7 +87,7 @@ function NavBar(){
                         {showNav && (
                             <div className={`nav-box ${showNav ? 'show' : ''}`}>
                                 <Link to="/dashboard">Projects</Link>
-                                <Link to="/user-details">email@email.com</Link>
+                                <Link to="/details-user">email@email.com</Link>
                                 <Link onClick={handleLogout}>Logout</Link>
                             </div>
                         )}

@@ -32,8 +32,8 @@ const Register = (props) => {
     })
     .then(response => {
         if(response.status === 201){
-          
-          navigate("/dashboard");
+          handleClose();
+          props.onRegister(true);
         }else if(response.status === 400 || response.status === 409){
           setRegisterError("There is already user registered on this email");
         }else if(response.status === 500){

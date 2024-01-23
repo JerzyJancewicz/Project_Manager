@@ -12,7 +12,7 @@ function Introduction(){
                             <h1 className="hero-title margin-bottom-xs">Fastest &amp; easiest platform to manage your projects</h1>
                             <p className="hero-subtitle text-gray margin-bottom-sm">Create and manage your own projects in a very easy way.<br/>Don&#x27;t waste your time.</p>
                             <div href="#" className="primary-button hero w-inline-block">
-                                <Link to="/dashboard" className="link-no-decoration"><div className="button-text text-sm text-height-sm font-medium">Try for FREE</div></Link>
+                                <Link to="/" className="link-no-decoration"><div className="button-text text-sm text-height-sm font-medium">Try for FREE</div></Link>
                             </div>
                         </div><img src={Project_Management} loading="lazy" width="615" sizes="(max-width: 767px) 100vw, 615px" alt="" className="hero-image"/>
                     </div>

@@ -37,6 +37,7 @@ builder.Services.AddAuthentication().AddJwtBearer(opt =>
         ValidAudience = config["JWT:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Key"]!))
     };
+    // Potential problem with Encoding
     opt.Events = new JwtBearerEvents
     {
         OnChallenge = context =>
@@ -60,7 +61,7 @@ builder.Services.AddCors(options =>
 
 
 builder.Services.AddScoped<ProjectSeeder>();
-builder.Services.AddAutoMapper(typeof(ProjectMapper), typeof(UserMapper));
+builder.Services.AddAutoMapper(typeof(ProjectMapper), typeof(UserMapper), typeof(RoleMapper));
 
 builder.Services.AddIdentity<User, Role>()
         .AddEntityFrameworkStores<ApiServiceDbContext>()
@@ -68,34 +69,7 @@ builder.Services.AddIdentity<User, Role>()
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    // ...
-
-    // Define the OAuth2 or bearer token scheme
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please enter into field the word 'Bearer' followed by a space and the JWT",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 var scope = app.Services.CreateScope();

@@ -9,15 +9,20 @@ function ProjectDashboard(){
     const[isFailedToLoad, setIsFailedToLoad] = useState(false);
     const[isProjectChanged, setIsProjectChanged] = useState(false);
     const[message, setMessage] = useState("message");
+    const[currentPage, setCurrentPage] = useState(1);
+    const[pageSize, setPageSize] = useState(15);
     const token = sessionStorage.getItem('token');
-
     const navigate = useNavigate("/dashboard");
-    useEffect(() => { 
+
+    useEffect(() => {
+        handleResize();
+        window.addEventListener('resize', handleResize);
         handleGet();
-    }, []);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [pageSize, currentPage]);
 
     const handleGet = () => {
-        fetch(`/api/Project/${token}`)
+        fetch(`/api/Project/${token}?page=${currentPage}&pageSize=${pageSize}`)
             .then((res) => {
                 return res.json();
             })
@@ -29,6 +34,24 @@ function ProjectDashboard(){
                 setIsFailedToLoad(true);
             });
     }
+
+    const calculatePageSize = () => {
+        const width = window.innerWidth;
+        if (width > 1780) {
+            return 15;
+        } else if (width > 1440) {
+            return 12;
+        } else if(width > 1090){
+            return 9;
+        } else if(width > 760){
+            return 6;
+        }
+    };
+
+    const handleResize = () => {
+        const newPageSize = calculatePageSize();
+        setPageSize(newPageSize);
+    };
 
     const handleCreate = () => {
         navigate("/create-project");
@@ -46,6 +69,24 @@ function ProjectDashboard(){
     }
     const handleIsDeleted = (isDeleted) => {
         setIsProjectChanged(isDeleted);
+    }
+
+    const handleNextPage = () => {
+        if(projectData.length < pageSize){
+            return
+        }
+        setCurrentPage(currentPage + 1);
+    };
+    
+    const handlePreviousPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
+    
+    const handlePage = (value) => {
+        if(projectData.length < pageSize && currentPage < value){
+            return
+        }
+        setCurrentPage(value);
     }
 
     useEffect(() => {
@@ -93,6 +134,22 @@ function ProjectDashboard(){
                             <div>No projects available.</div>
                         )}
                     </div>
+                </div>
+            </div>
+            <div className="pagination">
+                <div className="pagination-background">
+                    <a href="#" onClick={handlePreviousPage}>&laquo;</a>
+                    {[1, 2, 3, 4, 5, 6].map(number => (
+                        <a 
+                            href="#" 
+                            key={number}
+                            className={currentPage === number ? "active" : ""} 
+                            onClick={() => handlePage(number)}
+                        >
+                            {number}
+                        </a>
+                    ))}
+                    <a href="#" onClick={handleNextPage}>&raquo;</a>
                 </div>
             </div>
             <div className="page-padding">
