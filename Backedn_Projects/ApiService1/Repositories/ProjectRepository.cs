@@ -316,8 +316,6 @@ namespace ApiService1.Repositories
         {
             using (var context = _context.CreateDbContext())
             {
-                // Assuming you have a linking table named 'UserProject'
-                // and your User entity has a navigation property to 'UserProject'
                 var userIds = await context.UserProject.Where(e => e.ProjectId == projectId).Select(us => us.UserId).Distinct().ToListAsync();
                 var users = await context.User
                                  .Where(u => userIds.Contains(u.Id))
