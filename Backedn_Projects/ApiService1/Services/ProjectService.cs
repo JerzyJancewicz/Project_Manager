@@ -1,4 +1,5 @@
 ﻿using ApiService1.DTOs;
+using ApiService1.DTOs.ProjectDtos;
 using ApiService1.Entities;
 using ApiService1.Repositories;
 using AutoMapper;
@@ -17,7 +18,9 @@ namespace ApiService1.Services
         public Task<bool> ProjectExistsByEmail(string email);
         public Task<ProjectGET> GetProjectsById(int id);
         public Task<bool> UserContainsProjectById(string email, int Id);
-        public Task<ProjectGET> GetProjectContainingDetailsById(int Id);
+        public Task<ProjectGetWithUsers> GetProjectContainingDetailsById(int Id);
+        public Task CreateProjectOnUsers(ProjectCreate projectCreate, string userEmail,List<UserGET> users);
+        public Task<List<ProjectGET>> GetSharedProjectsByEmail(string email, int page, int pageSize);
     }
 
     public class ProjectService : IProjectService
@@ -103,12 +106,39 @@ namespace ApiService1.Services
             return await _repository.UserContainsProject(email, Id);
         }
 
-        public async Task<ProjectGET> GetProjectContainingDetailsById(int Id)
+        public async Task<ProjectGetWithUsers> GetProjectContainingDetailsById(int Id)
         {
             var project = await _repository.GetProjectContainingDetails(Id);
-            var projectDto = _mapper.Map<ProjectGET>(project);
+            var projectDto = _mapper.Map<ProjectGetWithUsers>(project);
 
+            var user = await _repository.GetUsersByProjectId(Id);
+            var userDto = _mapper.Map<List<UserGET>>(user);
+
+            projectDto.users = userDto;
             return projectDto;
+        }
+
+        public async Task CreateProjectOnUsers(ProjectCreate projectCreate, string userEmail, List<UserGET> usersDto)
+        {
+            var project = _mapper.Map<Project>(projectCreate);
+
+            var projectDetails = new ProjectDetails()
+            {
+                Title = projectCreate.Title,
+                Description = projectCreate.Description
+            };
+
+            var users = _mapper.Map<List<User>>(usersDto);
+
+            await _repository.CreateOnUsers(project, projectDetails, userEmail, users);
+        }
+
+        public async Task<List<ProjectGET>> GetSharedProjectsByEmail(string email, int page, int pageSize)
+        {
+            var projects = await _repository.GetSharedProjects(email, page, pageSize);
+            var projectsDto = _mapper.Map<List<ProjectGET>>(projects);
+
+            return projectsDto;
         }
     }
 }

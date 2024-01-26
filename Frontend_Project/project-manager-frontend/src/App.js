@@ -60,7 +60,7 @@ function App() {
               <Route path="/" element={<CustomHome />} />
               <Route path="/dashboard" element={<ProtectedRoute><ProjectDashboard /></ProtectedRoute>} />
               <Route path="/edit-project/:Id" element={<ProtectedRoute><EditProjectForm /></ProtectedRoute>} />
-              <Route path="/create-project" element={<ProtectedRoute><CreateProjectForm /></ProtectedRoute>} />
+              <Route path="/create-project/:type" element={<ProtectedRoute><CreateProjectForm /></ProtectedRoute>} />
               <Route path="/details-project/:Id" element={<ProtectedRoute><ProjectDetails /></ProtectedRoute>} />
               <Route path="/details-user" element={<ProtectedRoute><UserDetails /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />}/>

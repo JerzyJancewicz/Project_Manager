@@ -6,7 +6,8 @@ const ProjectDetails = () => {
     const [title, setTitle] = useState("");
     const [lastModified, setLastModified] = useState("");
     const [createdAt, setCreatedAt] = useState("");
-    
+    const [users, setUsers] = useState([]);
+
     const token = sessionStorage.getItem('token');
     const navigate = useNavigate("/dashboard");
     const {Id} = useParams();
@@ -31,6 +32,7 @@ const ProjectDetails = () => {
                 setDescription(data.description);
                 setCreatedAt(data.createAt);
                 setLastModified(data.lastModified);
+                setUsers(data.users);
             })
             .catch(error =>{
                 console.log(error);
@@ -50,6 +52,12 @@ const ProjectDetails = () => {
                     <p><strong>Description: </strong>{description}</p>
                     <p><strong>Created At: </strong>{createdAt}</p>
                     <p><strong>Last Modified: </strong>{lastModified}</p>
+                    <p>Users: </p>
+                    <ul>
+                        {users.map((user, index) => (
+                            <li key={index}><p>{user.email}</p></li>
+                        ))}
+                    </ul>
                 </div>
                 <div className="details-buttons">
                     <button onClick={handleReturn}>Return</button>

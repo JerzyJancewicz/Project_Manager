@@ -18,6 +18,9 @@ namespace ApiService1.Repositories
         public Task<bool> GetProjectByEmail(string email);
         public Task<Project?> GetProjectContainingDetails(int Id);
         public Task<bool> UserContainsProject(string email, int Id);
+        public Task CreateOnUsers(Project project, ProjectDetails projectDetails, string email, List<User> users);
+        public Task<List<Project>> GetSharedProjects(string email, int page, int pageSize);
+        public Task<List<User>> GetUsersByProjectId(int Id);
     }
     public class ProjectRepository : IProjectRepository
     {
@@ -125,36 +128,94 @@ namespace ApiService1.Repositories
         {
             using (var context = _context.CreateDbContext())
             {
-                var projects = new List<Project>();
                 var user = await context.User.FirstOrDefaultAsync(e => e.Email == email);
-                if (user is not null)
+                if (user == null)
                 {
-                    var userProjects = await context.UserProject.Where(e => e.UserId == user.Id).ToListAsync();
-                    if (userProjects is not null)
+                    return new List<Project>();
+                }
+
+                var userProjectIds = await context.UserProject
+                                                  .Where(up => up.UserId == user.Id)
+                                                  .Select(up => up.ProjectId)
+                                                  .ToListAsync();
+
+                var exclusiveProjects = new List<Project>();
+
+                foreach (var projectId in userProjectIds)
+                {
+                    var userCount = await context.UserProject.CountAsync(up => up.ProjectId == projectId);
+
+                    if (userCount == 1)
                     {
-                        foreach (var project in userProjects)
+                        var project = await context.Project.FirstOrDefaultAsync(p => p.IdProject == projectId);
+                        if (project != null)
                         {
-                            var userProject = await context.Project.FirstOrDefaultAsync(e => e.IdProject == project.ProjectId);
-                            projects.Add(userProject);
+                            exclusiveProjects.Add(project);
                         }
                     }
                 }
-                var projectDetails = await context.ProjectDetails.ToListAsync();
-                foreach (var project in projects)
+                foreach (var project in exclusiveProjects)
                 {
                     project.LastModified.ToString("yyyy-MM-dd : HH:mm:ss");
                     project.CreatedAt.ToString("yyyy-MM-dd : HH:mm:ss");
-                    var currentProjectDetails = projectDetails.FirstOrDefault(src => src.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
+                    var currentProjectDetails = await context.ProjectDetails.FirstOrDefaultAsync(pd => pd.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
                     if (currentProjectDetails != null)
                     {
                         project.IdProjectDetailsNavigation = currentProjectDetails;
                     }
                 }
-
-                var paginatedProjects = projects.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                var paginatedProjects = exclusiveProjects.Skip((page - 1) * pageSize).Take(pageSize).ToList();
                 return paginatedProjects;
             }
         }
+        public async Task<List<Project>> GetSharedProjects(string email, int page, int pageSize)
+        {
+            using (var context = _context.CreateDbContext())
+            {
+                var user = await context.User.FirstOrDefaultAsync(e => e.Email == email);
+                if (user == null)
+                {
+                    return new List<Project>();
+                }
+
+                var userProjectIds = await context.UserProject
+                                                  .Where(up => up.UserId == user.Id)
+                                                  .Select(up => up.ProjectId)
+                                                  .ToListAsync();
+
+                var sharedProjects = new List<Project>();
+
+                foreach (var projectId in userProjectIds)
+                {
+                    var userCount = await context.UserProject
+                                                 .CountAsync(up => up.ProjectId == projectId);
+
+                    if (userCount > 1)
+                    {
+                        var project = await context.Project
+                                                   .FirstOrDefaultAsync(p => p.IdProject == projectId);
+                        if (project != null)
+                        {
+                            sharedProjects.Add(project);
+                        }
+                    }
+                }
+                foreach (var project in sharedProjects)
+                {
+                    project.LastModified.ToString("yyyy-MM-dd : HH:mm:ss");
+                    project.CreatedAt.ToString("yyyy-MM-dd : HH:mm:ss");
+                    var currentProjectDetails = await context.ProjectDetails
+                                                             .FirstOrDefaultAsync(pd => pd.IdProjectDetails == project.ProjectDetailsIdProjectDetails);
+                    if (currentProjectDetails != null)
+                    {
+                        project.IdProjectDetailsNavigation = currentProjectDetails;
+                    }
+                }
+                var paginatedProjects = sharedProjects.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                return paginatedProjects;
+            }
+        }
+
 
         public async Task<bool> GetProjectByEmail(string email)
         {
@@ -205,5 +266,65 @@ namespace ApiService1.Repositories
                 return false;
             }
         }
+
+        public async Task CreateOnUsers(Project project, ProjectDetails projectDetails, string email, List<User> users)
+        {
+            using (var context = _context.CreateDbContext())
+            {
+                context.ProjectDetails.Add(projectDetails);
+                await context.SaveChangesAsync();
+
+                project.SetCreatedAt();
+                project.ProjectDetailsIdProjectDetails = projectDetails.IdProjectDetails;
+
+                context.Project.Add(project);
+                await context.SaveChangesAsync();
+
+                var emailUser = await context.User.FirstOrDefaultAsync(e => e.Email == email);
+                if (emailUser is not null)
+                {
+                    context.UserProject.Add(new UserProject()
+                    {
+                        UserId = emailUser.Id,
+                        ProjectId = project.IdProject
+                    });
+                }
+
+                List<User?> usersWithId = new List<User?>();
+                var doesUserContainsEmailUser = users.Any(e => e.Email == email);
+                foreach (var user in users)
+                {
+                    usersWithId.Add(await context.User.FirstOrDefaultAsync(e => e.Email == user.Email));
+                }
+                if (!doesUserContainsEmailUser)
+                {
+                    foreach (var user in usersWithId)
+                    {
+                        context.UserProject.Add(new UserProject()
+                        {
+                            UserId = user.Id,
+                            ProjectId = project.IdProject
+                        });
+                    }
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<User>> GetUsersByProjectId(int projectId)
+        {
+            using (var context = _context.CreateDbContext())
+            {
+                // Assuming you have a linking table named 'UserProject'
+                // and your User entity has a navigation property to 'UserProject'
+                var userIds = await context.UserProject.Where(e => e.ProjectId == projectId).Select(us => us.UserId).Distinct().ToListAsync();
+                var users = await context.User
+                                 .Where(u => userIds.Contains(u.Id))
+                                 .ToListAsync();
+                return users;
+            }
+        }
+
     }
 }

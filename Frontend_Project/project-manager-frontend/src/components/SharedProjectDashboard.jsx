@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Project from "./Project";
 import FailedToLoadData from "./Errors/FaileToLoadData"
 import ConfirmationAlert from "./Alerts/ConfirmationAlert";
-import SharedProjectDashboard from './SharedProjectDashboard';
 
 function ProjectDashboard(){
     const[projectData, setProjectData] = useState([]);
@@ -14,7 +13,6 @@ function ProjectDashboard(){
     const[pageSize, setPageSize] = useState(15);
     const token = sessionStorage.getItem('token');
     const navigate = useNavigate("/dashboard");
-    const[type, setType] = useState("single");
 
     useEffect(() => {
         handleResize();
@@ -24,7 +22,7 @@ function ProjectDashboard(){
     }, [pageSize, currentPage]);
 
     const handleGet = () => {
-        fetch(`/api/Project/${token}/group/false?page=${currentPage}&pageSize=${pageSize}`)
+        fetch(`/api/Project/${token}/group/true?page=${currentPage}&pageSize=${pageSize}`)
             .then((res) => {
                 return res.json();
             })
@@ -115,9 +113,8 @@ function ProjectDashboard(){
                         message = {message}
                     />
                  : <></>}
-                <h2 style={{marginLeft: '20px', paddingTop: '10px'}}>Own Projects:</h2>
                 <div className="div-block">
-                    <button data-w-id="2333b2d0-c779-4514-db04-d3dbf49952ad" className="addbutton w-button" onClick={() => {handleCreate("single")}}>Add Project</button>
+                    <button data-w-id="2333b2d0-c779-4514-db04-d3dbf49952ad" className="addbutton w-button" onClick={() => handleCreate('multi')}>Add Group Project</button>
                     <div className="div-block-2">
                         {Array.isArray(projectData) ? (
                             projectData.map((data) => (
@@ -158,9 +155,8 @@ function ProjectDashboard(){
             <div className="page-padding">
                 <div className="w-layout-blockcontainer w-container"></div>
             </div>
+
             
-            <h2 style={{marginLeft: '20px'}}>Group Projects:</h2>
-            <SharedProjectDashboard/>
         </section>
     );
 }

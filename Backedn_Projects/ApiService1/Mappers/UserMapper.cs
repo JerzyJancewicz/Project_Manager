@@ -11,8 +11,8 @@ namespace ApiService1.Mappers
         {
             CreateMap<User, UserGET>()
                 .ForMember(src => src.Name, opt => opt.MapFrom(src => src.IdUserDetailsNavigation.Name))
-                .ForMember(src => src.Surname, opt => opt.MapFrom(src => src.IdUserDetailsNavigation.Surname))
-                .ForMember(src => src.Password, opt => opt.MapFrom(src => src.PasswordHash));
+                .ForMember(src => src.Surname, opt => opt.MapFrom(src => src.IdUserDetailsNavigation.Surname));
+            CreateMap<UserGET, User>();
 
             CreateMap<UserCreate, User>();
             CreateMap<UserCreate, UserDetails>();

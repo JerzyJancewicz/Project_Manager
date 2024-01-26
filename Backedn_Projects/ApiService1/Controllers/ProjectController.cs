@@ -36,8 +36,8 @@ namespace ApiService1.Controllers
             return roleClaim?.Value;
         }
 
-        [HttpGet("{key}")]
-        public async Task<IActionResult> GetProject(string key, int page, int pageSize)
+        [HttpGet("{key}/group/{isGroup}")]
+        public async Task<IActionResult> GetProject(string key, int page, int pageSize, bool isGroup)
         {
             try
             {
@@ -53,7 +53,14 @@ namespace ApiService1.Controllers
             {
                 return Ok(await _service.GetAllProjects(page, pageSize));
             }
-            return Ok(await _service.GetProjectsByEmail(userEmail, page, pageSize));
+            if (isGroup)
+            {
+                return Ok(await _service.GetSharedProjectsByEmail(userEmail, page, pageSize));
+            }
+            else
+            {
+                return Ok(await _service.GetProjectsByEmail(userEmail, page, pageSize));
+            }
         }
 
         [HttpGet("{Id}/{key}")]
@@ -76,8 +83,8 @@ namespace ApiService1.Controllers
             return Ok(await _service.GetProjectContainingDetailsById(Id));
         }
 
-        [HttpPost("{key}")]
-        public async Task<IActionResult> CreateProject(ProjectCreate project, string key)
+        [HttpPost("{key}/{isGroup}")]
+        public async Task<IActionResult> CreateProject(ProjectCreate project, string key, bool isGroup)
         {
             try
             {
@@ -88,8 +95,16 @@ namespace ApiService1.Controllers
                 return Unauthorized();
             }
             var userEmail = GetUsersEmail(key);
-            await _service.CreateProject(project, userEmail);
-            return Created("", "");
+            if (isGroup)
+            {
+                await _service.CreateProjectOnUsers(project, userEmail, project.users);
+                return Created("", "");
+            }
+            else
+            {
+                await _service.CreateProject(project, userEmail);
+                return Created("", "");
+            }
         }
 
         [HttpPut("{Id}/{key}")]

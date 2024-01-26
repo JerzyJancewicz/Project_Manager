@@ -28,11 +28,13 @@ const Login = (props) => {
       if(response.ok){
         return response.json();
       }else{
+        console.log("cs");
         setLoginError(true);
       }
     })
     .then((data) => {
         authCtx.login(data.token);
+        authCtx.showLogin(email);
         setIsOpen(!isOpen);
         props.onClose(isOpen);
         navigate("/dashboard");

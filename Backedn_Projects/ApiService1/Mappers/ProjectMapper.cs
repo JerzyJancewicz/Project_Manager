@@ -1,4 +1,5 @@
 ﻿using ApiService1.DTOs;
+using ApiService1.DTOs.ProjectDtos;
 using ApiService1.Entities;
 using AutoMapper;
 
@@ -15,6 +16,8 @@ namespace ApiService1.Mappers
 
             CreateMap<ProjectCreate, Project>();
             CreateMap<ProjectUpdate, ProjectDetails>();
+
+            CreateMap<Project, ProjectGetWithUsers>();
         }
     }
 }

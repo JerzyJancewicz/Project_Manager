@@ -1,4 +1,5 @@
-﻿using ApiService1.DTOs.UserDtos;
+﻿using ApiService1.DTOs;
+using ApiService1.DTOs.UserDtos;
 using ApiService1.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -33,6 +34,21 @@ namespace ApiService1.Controllers
                 return NotFound();
             }
             return Ok(await _userService.GetUser(email));
+        }
+
+        [HttpGet("{token}/{user}")]
+        public async Task<IActionResult> GetUser(string token, string user)
+        {
+            var email = GetUsersEmail(token);
+            if (!await _userService.UserExists(email))
+            {
+                return Conflict();
+            }
+            if (!await _userService.UserExists(user))
+            {
+                return NotFound();
+            }
+            return Ok();
         }
 
         [HttpPost]
