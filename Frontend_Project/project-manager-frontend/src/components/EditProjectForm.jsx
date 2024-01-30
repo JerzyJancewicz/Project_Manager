@@ -47,6 +47,7 @@ const EditProjectForm = () => {
             description: description
         })
         })
+        // ok
         .then(response => {
             if(response.ok){
                 navigate(`/details-project/${Id}`)
