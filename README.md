@@ -36,7 +36,7 @@ The application named "Project Manager" is designed to facilitate the management
 - React.js
 
 ### DB-Engine:
-- MySQL
+- MsSQL
 
 ## Scripts
 
