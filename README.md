@@ -1,55 +1,55 @@
-### Strona główna (Dashboard):
+# Project Manager
 
-- Po zalogowaniu użytkownik zostaje przekierowany na stronę główną, na której widzi listę projektów przypisanych do niego.
-Wyświetla się ogólna lista projektów wraz z ich nazwami, terminami i statusami.
-Użytkownik ma dostęp do opcji filtrowania i sortowania projektów.
+## Project Overview
 
-### Lista projektów:
+The application named "Project Manager" is designed to facilitate the management of projects and tasks. Users can easily create, edit, and delete their projects. Additionally, users have the option to create shared projects.
 
-- Użytkownik może przejść do listy wszystkich projektów, niezależnie od przypisania.
-Widoczne są podstawowe informacje o projektach, takie jak nazwa, termin i status.
+## Features
 
-### Tworzenie nowego projektu:
+- **Full CRUD Operations:** Users can create, read, update, and delete projects.
+- **List Display:** Display lists of all records for each table.
+- **Detailed Views:** Show detailed views of individual projects.
+- **Data Validation:** Client-side and server-side data validation.
+- **User Registration and Login:** Enable user registration and login functionality.
+- **Authentication and Authorization:** Implement user authentication and authorization using JWT Token.
+- **Pagination:** Paginate displayed lists for better usability.
+- **Shared Projects:** Allow projects to be shared between users.
 
-- Użytkownik ma możliwość utworzenia nowego projektu poprzez wypełnienie formularza.
-Formularz może zawierać pola takie jak nazwa projektu, opis, termin itp.
+## Database Model
 
-### Edycja projektu:
+![Database Model](path/to/your/database_model.png)
 
-- Użytkownik, który jest właścicielem lub ma odpowiednie uprawnienia, może edytować istniejący projekt.
-Możliwość zmiany nazwy, opisu, terminu itp.
+## Technologies
 
-### Dodawanie i edycja zadań:
+### Backend:
+- .NET Entity Framework Core
 
-- W ramach projektu użytkownik może tworzyć i edytować zadania.
-Formularz dodawania/edycji zadania może zawierać pola, takie jak nazwa zadania, opis, termin, przypisany użytkownik itp.
+### Frontend:
+- React.js
 
-### Przypisywanie użytkowników do projektu:
+### DB-Engine:
+- MySQL
 
-- Użytkownik może przypisywać innych użytkowników do projektu jako członków zespołu lub liderów.
-Dostęp do tej funkcji mogą mieć tylko użytkownicy z odpowiednimi uprawnieniami.
+## Scripts
 
-### Zmiana statusu projektu i zadań:
-
-- Użytkownik ma możliwość zmiany statusu projektu na np. "w toku", "zakończony" itp.
-Może również aktualizować statusy zadań, oznaczając je jako "do zrobienia", "w trakcie", "zakończone" itp.
-
-### Szczegóły projektu:
-
-- sPo kliknięciu w projekt użytkownik zostaje przeniesiony na stronę szczegółową projektu.
-Tam może zobaczyć wszystkie informacje o projekcie, takie jak lista zadań, opis, termin itp.
-
-### Paginacja i sortowanie:
-
-- W przypadku większej liczby projektów i zadań, aplikacja powinna obsługiwać paginację, pozwalając na wyświetlanie wyników na kilku stronach.
-Użytkownik powinien mieć możliwość sortowania projektów i zadań według różnych kryteriów.
-
-### Rejestracja i logowanie:
-
-- Aplikacja powinna umożliwiać użytkownikom rejestrację nowych kont i logowanie się.
-W zależności od statusu użytkownika (zalogowany/gość) dostępne będą różne funkcjonalności.
-
-### Role użytkowników:
-
-- W zależności od roli użytkownika (np. pracownik, lider projektu, administrator), dostępne są różne funkcjonalności.
-Pracownicy mogą przeglądać projekty, liderzy mogą nimi zarządzać, a administratorzy mają pełne uprawnienia.
+### To build the frontend application, use the npm package manager:
+```bash
+npm install
+npm start
+```
+Since the database was created using the code-first approach, several actions are required.
+To migrate the database, specify the appropriate connection string in the appsettings.json file, e.g.:
+```js
+"ConnectionStrings": {
+    "Default": "Server=(localdb)\\mssqllocaldb;Database=MangeITdb;Trusted_Connection=True;"
+}
+```
+Then, in the NuGet Package Manager, enter the command (RECOMMENDED):
+```bash
+update-database
+```
+Or using a standard cmd (might not work):
+```bash
+dotnet ef database update
+```
+If the result is positive, tables and sample data should be added automatically, as the program has an implemented seeder with example data.
