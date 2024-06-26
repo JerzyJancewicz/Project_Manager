@@ -17,7 +17,7 @@ The application named "Project Manager" is designed to facilitate the management
 
 ## Database Model
 
-![Database Model](path/to/your/database_model.png)
+![Database Model](Photos/DbModel.jpg)
 
 ## Technologies
 
