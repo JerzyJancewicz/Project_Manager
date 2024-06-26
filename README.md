@@ -19,6 +19,11 @@ The application named "Project Manager" is designed to facilitate the management
 
 ![Database Model](Photos/DbModel.jpg)
 
+## Application Views
+![Main Page](Photos/MainPage.jpg)
+![Dashboard](Photos/Dashboard.jpg)
+![Register](Photos/Register.jpg)
+
 ## Technologies
 
 ### Backend:
