@@ -64,7 +64,9 @@ const EditProjectForm = () => {
     };
 
     const handleCreate = () => {
-        var isGroup = type == 'multi'
+        var isGroup = type == 'multi' ? true : false
+        console.log(userList);
+        console.log(type);
         fetch(`/api/Project/${token}/${isGroup}`, {
           method: 'POST',
           headers: {

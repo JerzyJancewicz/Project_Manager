@@ -17,7 +17,9 @@ namespace ApiService1.Mappers
             CreateMap<ProjectCreate, Project>();
             CreateMap<ProjectUpdate, ProjectDetails>();
 
-            CreateMap<Project, ProjectGetWithUsers>();
+            CreateMap<Project, ProjectGetWithUsers>()
+                .ForMember(src => src.Title, opt => opt.MapFrom(src => src.IdProjectDetailsNavigation.Title))
+                .ForMember(src => src.Description, opt => opt.MapFrom(src => src.IdProjectDetailsNavigation.Description));
         }
     }
 }

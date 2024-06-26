@@ -29,6 +29,7 @@ function ProjectDashboard(){
                 return res.json();
             })
             .then((data) => {
+                console.log(data);
                 setProjectData(data);
             })
             .catch(error =>{
@@ -123,9 +124,9 @@ function ProjectDashboard(){
                             projectData.map((data) => (
                                 <Project 
                                     key = {data.idProject}
-                                    title = {data.title}
                                     description = {data.description}
-                                    createdAt = {data.createAt}
+                                    title = {data.title}
+                                    descredAt = {data.createAt}
                                     lastModified = {data.lastModified} 
                                     Id = {data.idProject}
                                     messageOnAction = {handleMessageOnAction}

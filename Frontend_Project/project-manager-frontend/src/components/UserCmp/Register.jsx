@@ -38,6 +38,8 @@ const Register = (props) => {
           setRegisterError("There is already user registered on this email");
         }else if(response.status === 500){
           setRegisterError("Can't connect to the server");
+        }else{
+          setRegisterError("Unexpected error occurred")
         }
     })
     .catch((error) => {

@@ -27,6 +27,7 @@ const EditProjectForm = () => {
               })
             .then((data) => {
                 setTitle(data.title);
+                console.log(data);
                 setDescription(data.description);
                 setCreatedAt(data.createAt);
                 setLastModified(data.lastModified);

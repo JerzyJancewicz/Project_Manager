@@ -26,6 +26,7 @@ const Login = (props) => {
     })
     .then(response => {
       if(response.ok){
+        console.log("login ok");
         return response.json();
       }else{
         console.log("cs");
@@ -34,7 +35,7 @@ const Login = (props) => {
     })
     .then((data) => {
         authCtx.login(data.token);
-        authCtx.showLogin(email);
+        //authCtx.showLogin(email);
         setIsOpen(!isOpen);
         props.onClose(isOpen);
         navigate("/dashboard");
